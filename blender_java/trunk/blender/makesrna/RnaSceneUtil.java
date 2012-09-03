@@ -6,6 +6,7 @@ import static blender.windowmanager.WmTypes.*;
 import static blender.makesrna.RnaDefine.*;
 import static blender.makesrna.RNATypes.*;
 import static blender.makesdna.UserDefTypes.*;
+import static blender.blenkernel.Blender.U;
 import static blender.blenkernel.Writeffmpeg.*;
 import static blender.render.RePipeline.*;
 import blender.blenlib.threads;
@@ -78,6 +79,14 @@ public class RnaSceneUtil {
 //	#include "WM_types.h"
 //
 //	#include "BLI_threads.h"
+	
+	/* helper macro for checking frame clamping */
+	public static final int FRAMENUMBER_MIN_CLAMP(int cfra)
+	{
+		if ((U.flag & USER_NONEGFRAMES)!=0 && (cfra < 0))
+			return 0;
+		return cfra;
+	}
 
 	static EnumPropertyItem snap_target_items[] = {
 		new EnumPropertyItem(SCE_SNAP_TARGET_CLOSEST, "CLOSEST", 0, "Closest", "Snap closest point onto target"),

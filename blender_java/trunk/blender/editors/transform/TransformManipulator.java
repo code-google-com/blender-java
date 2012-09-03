@@ -228,7 +228,7 @@ public static int calc_manipulator_stats(bContext C)
 {
 	ScrArea sa= bContext.CTX_wm_area(C);
 	ARegion ar= bContext.CTX_wm_region(C);
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	bObject obedit= bContext.CTX_data_edit_object(C);
 	View3D v3d= (View3D)sa.spacedata.first;
 	RegionView3D rv3d= (RegionView3D)ar.regiondata;
@@ -1459,7 +1459,7 @@ public static void BIF_draw_manipulator(GL2 gl, bContext C)
 //        System.out.println("BIF_draw_manipulator");
 	ScrArea sa= bContext.CTX_wm_area(C);
 	ARegion ar= bContext.CTX_wm_region(C);
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	View3D v3d= (View3D)sa.spacedata.first;
 	RegionView3D rv3d= (RegionView3D)ar.regiondata;
 	int totsel;

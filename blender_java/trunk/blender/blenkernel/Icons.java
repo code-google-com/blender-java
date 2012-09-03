@@ -118,14 +118,14 @@ public class Icons {
 //	gIcons = NULL;
 //}
 
-    public static PreviewImage BKE_previewimg_create() {
-        PreviewImage prv_img = new PreviewImage();
-
-        for (int i = 0; i < DNA_ID.PREVIEW_MIPMAPS; ++i) {
-            prv_img.changed[i] = 1;
-        }
-        return prv_img;
-    }
+//    public static PreviewImage BKE_previewimg_create() {
+//        PreviewImage prv_img = new PreviewImage();
+//
+//        for (int i = 0; i < DNA_ID.PREVIEW_MIPMAPS; ++i) {
+//            prv_img.changed[i] = 1;
+//        }
+//        return prv_img;
+//    }
 
 //void BKE_previewimg_free(PreviewImage **prv)
 //{
@@ -181,43 +181,43 @@ public class Icons {
 //	}
 //}
 
-    public static PreviewImage BKE_previewimg_get(ID id) {
-        PreviewImage prv_img = null;
-
-        if (LibraryUtil.GS(id.name) == DNA_ID.ID_MA) {
-            Material mat = (Material) id;
-            if (mat.preview == null) {
-                mat.preview = BKE_previewimg_create();
-            }
-            prv_img = mat.preview;
-        } else if (LibraryUtil.GS(id.name) == DNA_ID.ID_TE) {
-            Tex tex = (Tex) id;
-            if (tex.preview == null) {
-                tex.preview = BKE_previewimg_create();
-            }
-            prv_img = tex.preview;
-        } else if (LibraryUtil.GS(id.name) == DNA_ID.ID_WO) {
-            World wo = (World) id;
-            if (wo.preview == null) {
-                wo.preview = BKE_previewimg_create();
-            }
-            prv_img = wo.preview;
-        } else if (LibraryUtil.GS(id.name) == DNA_ID.ID_LA) {
-            Lamp la = (Lamp) id;
-            if (la.preview == null) {
-                la.preview = BKE_previewimg_create();
-            }
-            prv_img = la.preview;
-        } else if (LibraryUtil.GS(id.name) == DNA_ID.ID_IM) {
-            Image img = (Image) id;
-            if (img.preview == null) {
-                img.preview = BKE_previewimg_create();
-            }
-            prv_img = img.preview;
-        }
-
-        return prv_img;
-    }
+//    public static PreviewImage BKE_previewimg_get(ID id) {
+//        PreviewImage prv_img = null;
+//
+//        if (LibraryUtil.GS(id.name) == DNA_ID.ID_MA) {
+//            Material mat = (Material) id;
+//            if (mat.preview == null) {
+//                mat.preview = BKE_previewimg_create();
+//            }
+//            prv_img = mat.preview;
+//        } else if (LibraryUtil.GS(id.name) == DNA_ID.ID_TE) {
+//            Tex tex = (Tex) id;
+//            if (tex.preview == null) {
+//                tex.preview = BKE_previewimg_create();
+//            }
+//            prv_img = tex.preview;
+//        } else if (LibraryUtil.GS(id.name) == DNA_ID.ID_WO) {
+//            World wo = (World) id;
+//            if (wo.preview == null) {
+//                wo.preview = BKE_previewimg_create();
+//            }
+//            prv_img = wo.preview;
+//        } else if (LibraryUtil.GS(id.name) == DNA_ID.ID_LA) {
+//            Lamp la = (Lamp) id;
+//            if (la.preview == null) {
+//                la.preview = BKE_previewimg_create();
+//            }
+//            prv_img = la.preview;
+//        } else if (LibraryUtil.GS(id.name) == DNA_ID.ID_IM) {
+//            Image img = (Image) id;
+//            if (img.preview == null) {
+//                img.preview = BKE_previewimg_create();
+//            }
+//            prv_img = img.preview;
+//        }
+//
+//        return prv_img;
+//    }
 
 //void BKE_icon_changed(int id)
 //{

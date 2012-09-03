@@ -159,7 +159,7 @@ public static SpaceType.New view3d_new = new SpaceType.New() {
 public SpaceLink run(bContext C)
 //static SpaceLink *view3d_new(const bContext *C)
 {
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	ARegion ar;
 	View3D v3d;
 	RegionView3D rv3d;
@@ -703,7 +703,7 @@ public boolean run(bContext C, byte[] member, bContextDataResult result)
 //static int view3d_context(const bContext *C, const char *member, bContextDataResult *result)
 {
 	View3D v3d= bContext.CTX_wm_view3d(C);
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	Base base;
 	int lay = v3d!=null ? v3d.lay:scene.lay; /* fallback to the scene layer, allows duplicate and other oject operators to run outside the 3d view */
 

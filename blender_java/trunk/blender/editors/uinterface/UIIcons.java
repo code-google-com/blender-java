@@ -988,15 +988,15 @@ static void icon_draw_size(GL2 gl, float x, float y, int icon_id, float aspect, 
 		icon_draw_rect(gl, x,y,di.w, di.h, di.aspect, di.icon.w, di.icon.h, di.icon.rect);
 	}
 	else {
-		PreviewImage pi = Icons.BKE_previewimg_get((ID)icon.obj);
-
-		if (pi!=null) {
-			/* no create icon on this level in code */
-			
-			if (pi.rect[miplevel]==null) return; /* something has gone wrong! */
-			
-			icon_draw_rect(gl, x,y,di.w, di.h, di.aspect, pi.w[miplevel], pi.h[miplevel], (ByteBuffer)pi.rect[miplevel]);
-		}
+//		PreviewImage pi = Icons.BKE_previewimg_get((ID)icon.obj);
+//
+//		if (pi!=null) {
+//			/* no create icon on this level in code */
+//			
+//			if (pi.rect[miplevel]==null) return; /* something has gone wrong! */
+//			
+//			icon_draw_rect(gl, x,y,di.w, di.h, di.aspect, pi.w[miplevel], pi.h[miplevel], (ByteBuffer)pi.rect[miplevel]);
+//		}
 	}
 }
 

@@ -381,7 +381,7 @@ public static void setup_app_data(bContext C, BlendFileData bfd, String filename
 	if(bContext.CTX_data_scene(C)==null) {
 		bContext.CTX_data_scene_set(C, bfd.main.scene.first);
 		bContext.CTX_wm_screen(C).scene= bContext.CTX_data_scene(C);
-		curscene= bContext.CTX_data_scene(C);
+		curscene= (Scene)bContext.CTX_data_scene(C);
 	}
 
 	/* special cases, override loaded flags: */
@@ -394,16 +394,16 @@ public static void setup_app_data(bContext C, BlendFileData bfd, String filename
 
 	G.f= bfd.globalf;
 
-	if (G.background==0) {
+	//if (G.background==0) {
 		//setscreen(G.curscreen);
-	}
+	//}
 
 //	// XXX temporarily here
 //	if(G.main.versionfile < 250)
 //		do_versions_ipos_to_animato(G.main); // XXX fixme... complicated versionpatching
 
 	/* baseflags, groups, make depsgraph, etc */
-	SceneUtil.set_scene_bg(bContext.CTX_data_scene(C));
+	SceneUtil.set_scene_bg((Scene)bContext.CTX_data_scene(C));
 
 //	/* last stage of do_versions actually, that sets recalc flags for recalc poses */
 //	for(ob= G.main.object.first; ob; ob= ob.id.next) {

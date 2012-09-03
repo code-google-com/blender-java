@@ -1147,7 +1147,7 @@ public void run(bContext C, Panel pa)
 {
 //        System.out.println("view3d_panel_object");
 	uiBlock block;
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	bObject obedit= bContext.CTX_data_edit_object(C);
 	View3D v3d= bContext.CTX_wm_view3d(C);
 	//uiBut *bt;

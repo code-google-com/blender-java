@@ -254,7 +254,7 @@ static RegionView3D wm_region_view3d(bContext C)
 // XXX quickly ported across
 static void handle_view3d_lock(bContext C)
 {
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	ScrArea sa= bContext.CTX_wm_area(C);
 	View3D v3d= bContext.CTX_wm_view3d(C);
 
@@ -3689,7 +3689,7 @@ public void run(bContext C, Object arg, Object event)
 {
 //        System.out.println("do_view3d_header_buttons");
 	wmWindow win= bContext.CTX_wm_window(C);
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	ToolSettings ts= bContext.CTX_data_tool_settings(C);
 	ScrArea sa= bContext.CTX_wm_area(C);
 	View3D v3d= (View3D)sa.spacedata.first;
@@ -4135,7 +4135,7 @@ public static void uiTemplateHeader3D(uiLayout layout, bContext C)
 	bScreen screen= bContext.CTX_wm_screen(C);
 	ScrArea sa= bContext.CTX_wm_area(C);
 	final View3D v3d= (View3D)sa.spacedata.first;
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	ToolSettings ts= bContext.CTX_data_tool_settings(C);
 	PointerRNA v3dptr=new PointerRNA(), toolsptr=new PointerRNA(), sceneptr=new PointerRNA();
 	Object ob= Blender.OBACT(scene);
@@ -4280,7 +4280,7 @@ public static void uiTemplateHeader3D(GL2 gl, uiLayout layout, bContext C)
 	ARegion ar= bContext.CTX_wm_region(C);
 	ScrArea sa= bContext.CTX_wm_area(C);
 	final View3D v3d= (View3D)sa.spacedata.first;
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	ToolSettings ts= bContext.CTX_data_tool_settings(C);
 	bObject ob= Blender.OBACT(scene);
 	bObject obedit = bContext.CTX_data_edit_object(C);

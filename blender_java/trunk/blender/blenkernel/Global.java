@@ -55,7 +55,7 @@ public class Global {
 	public ListBase<RecentFile> recent_files = new ListBase<RecentFile>();
 
 	public short afbreek, moving;
-	public short background;
+//	public short background;
 	public short winpos, displaymode;	/* used to be in Render */
 	public short rendering;			/* to indicate render is busy, prevent renderwindow events etc */
 

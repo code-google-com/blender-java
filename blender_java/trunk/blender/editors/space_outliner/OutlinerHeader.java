@@ -155,7 +155,7 @@ public void run(bContext C, Object arg, Object event)
 //static void do_outliner_buttons(bContext *C, void *arg, int event)
 {
 	ScrArea sa= bContext.CTX_wm_area(C);
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 
 	switch((Integer)event) {
 		case B_REDR:
@@ -197,7 +197,7 @@ public void run(bContext C, Object arg, Object event)
 public static void outliner_header_buttons(GL2 gl, bContext C, ARegion ar)
 {
 	final ScrArea sa= bContext.CTX_wm_area(C);
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	final SpaceOops soutliner= bContext.CTX_wm_space_outliner(C);
 	uiBlock block;
 	int xco, yco= 3, xmax;

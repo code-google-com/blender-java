@@ -4753,7 +4753,7 @@ public static void lib_link_screen_restore(Main newmain, bScreen curscreen, Scen
 
 					v3d.camera= (bObject)restore_pointer_by_name(newmain, (ID)v3d.camera, 1);
 					if(v3d.camera==null)
-						v3d.camera= sc.scene.camera;
+						v3d.camera= ((Scene)sc.scene).camera;
 					v3d.ob_centre= (bObject)restore_pointer_by_name(newmain, (ID)v3d.ob_centre, 1);
 
 					if(v3d.bgpic!=null) {
@@ -4762,7 +4762,7 @@ public static void lib_link_screen_restore(Main newmain, bScreen curscreen, Scen
 					if(v3d.localvd!=null) {
 						/*Base *base;*/
 
-						v3d.localvd.camera= sc.scene.camera;
+						v3d.localvd.camera= ((Scene)sc.scene).camera;
 
 						/* localview can become invalid during undo/redo steps, so we exit it when no could be found */
 						/* XXX  regionlocalview ?
@@ -4778,7 +4778,7 @@ public static void lib_link_screen_restore(Main newmain, bScreen curscreen, Scen
 						}
 						*/
 					}
-					else if(v3d.scenelock!=0) v3d.lay= sc.scene.lay;
+					else if(v3d.scenelock!=0) v3d.lay= ((Scene)sc.scene).lay;
 
 					/* not very nice, but could help */
 					if((v3d.layact & v3d.lay)==0) v3d.layact= v3d.lay;
@@ -5486,7 +5486,7 @@ public static void link_global(FileData fd, BlendFileData bfd)
 	bfd.curscene= (Scene)newlibadr(fd, 0, bfd.curscene);
 	// this happens in files older than 2.35
 	if(bfd.curscene==null) {
-		if(bfd.curscreen!=null) bfd.curscene= bfd.curscreen.scene;
+		if(bfd.curscreen!=null) bfd.curscene= (Scene)bfd.curscreen.scene;
 	}
 }
 

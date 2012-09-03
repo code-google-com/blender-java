@@ -221,7 +221,7 @@ public static void ED_base_object_select(Base base, int mode)
 /* also to set active NULL */
 public static void ED_base_object_activate(bContext C, Base base)
 {
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	Base tbase;
 	
 	/* activating a non-mesh, should end a couple of modes... */
@@ -254,7 +254,7 @@ public static void ED_base_object_activate(bContext C, Base base)
 public static void ED_object_base_init_from_view(bContext C, Base base)
 {
 	View3D v3d= bContext.CTX_wm_view3d(C);
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	bObject ob= base.object;
 
 	if (scene==null)
@@ -317,7 +317,7 @@ public static EnumPropertyItem[] prop_object_types = {
 /* for object add primitive operators */
 public static bObject object_add_type(bContext C, int type)
 {
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	bObject ob;
 
 	/* XXX hrms, this is editor level operator, remove? */
@@ -3653,7 +3653,7 @@ public void run(wmOperatorType ot)
 
 public static void ED_object_exit_editmode(bContext C, int flag)
 {
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	bObject obedit= bContext.CTX_data_edit_object(C);
 	int freedata = flag & EM_FREEDATA;
 
@@ -3727,7 +3727,7 @@ public static void ED_object_exit_editmode(bContext C, int flag)
 public static void ED_object_enter_editmode(bContext C, int flag)
 {
         System.out.println("ED_object_enter_editmode");
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	Base base= bContext.CTX_data_active_base(C);
 	bObject ob;
 	ScrArea sa= bContext.CTX_wm_area(C);

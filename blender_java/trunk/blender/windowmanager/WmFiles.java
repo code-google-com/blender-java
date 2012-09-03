@@ -187,7 +187,7 @@ public static void wm_window_match_do(bContext C, ListBase<wmWindowManager> oldw
 						if(win.active!=0)
 							wm.winactive= win;
 						
-						if(G.background==0) /* file loading in background mode still calls this */
+						//if(G.background==0) /* file loading in background mode still calls this */
 							GhostAPI.GHOST_SetWindowUserData(win.ghostwin, win);	/* pointer back */
 
 						oldwin.ghostwin= null;

@@ -260,22 +260,22 @@ public static void wm_window_close(bContext C, wmWindowManager wm, wmWindow win)
 public static void wm_window_title(bContext C, wmWindowManager wm, wmWindow win)
 {
 	/* handle the 'temp' window */
-	if(win.screen!=null && win.screen.temp!=0) {
+//	if(win.screen!=null && win.screen.temp!=0) {
 		GhostAPI.GHOST_SetTitle(win.ghostwin, "Blender");
-	}
-	else {
+//	}
+//	else {
 		
 		/* this is set to 1 if you don't have startup.blend open */
 		//if(G.save_over!=0 && G.main.name[0]!=0) {
-		if(G.save_over!=0 && bContext.wm_title(C)!="") {
+//		if(G.save_over!=0 && bContext.wm_title(C)!="") {
 //			char str[sizeof(G.main.name) + 12];
 //			BLI_snprintf(str, sizeof(str), "Blender%s [%s]", wm.file_saved ? "":"*", G.main.name);
 			//String str = String.format("Blender%s [%s]", wm.file_saved!=0 ? "":"*", StringUtil.toJString(G.main.name,0));
-			String str = String.format("Blender%s [%s]", wm.file_saved!=0 ? "":"*", bContext.wm_title(C));
-			GhostAPI.GHOST_SetTitle(win.ghostwin, str);
-		}
-		else
-			GhostAPI.GHOST_SetTitle(win.ghostwin, "Blender");
+//			String str = String.format("Blender%s [%s]", wm.file_saved!=0 ? "":"*", bContext.wm_title(C));
+//			GhostAPI.GHOST_SetTitle(win.ghostwin, str);
+//		}
+//		else
+//			GhostAPI.GHOST_SetTitle(win.ghostwin, "Blender");
 
 		/* Informs GHOST of unsaved changes, to set window modified visual indicator (MAC OS X)
 		 and to give hint of unsaved changes for a user warning mechanism
@@ -288,7 +288,7 @@ public static void wm_window_title(bContext C, wmWindowManager wm, wmWindow win)
 //		else
 //			GHOST_SetWindowState(win->ghostwin, GHOST_kWindowStateModified);
 //#endif
-	}
+//	}
 }
 
 /* belongs to below */

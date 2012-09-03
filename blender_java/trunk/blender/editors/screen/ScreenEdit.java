@@ -410,7 +410,7 @@ public static ScrArea area_split(wmWindow win, bScreen sc, ScrArea sa, char dir,
 
 /* empty screen, with 1 dummy area without spacedata */
 /* uses window size */
-public static bScreen ED_screen_add(wmWindow win, Scene scene, byte[] name, int offset)
+public static bScreen ED_screen_add(wmWindow win, Object scene, byte[] name, int offset)
 {
 	bScreen sc;
 	ScrVert sv1, sv2, sv3, sv4;
@@ -1385,7 +1385,7 @@ public static void ED_screen_set_scene(bContext C, Scene scene)
 					if(sl.spacetype==SpaceTypes.SPACE_VIEW3D) {
 						View3D v3d= (View3D) sl;
 						if (v3d.camera==null || SceneUtil.object_in_scene(v3d.camera, scene)==null) {
-							v3d.camera= SceneUtil.scene_find_camera(sc.scene);
+							v3d.camera= SceneUtil.scene_find_camera((Scene)sc.scene);
 							// XXX if (sc==curscreen) handle_view3d_lock();
 							if (v3d.camera==null && v3d.persp==View3dTypes.V3D_CAMOB)
 								v3d.persp= View3dTypes.V3D_PERSP;

@@ -125,7 +125,7 @@ public static Operator ED_operator_scene_editable = new Operator() {
 public int run(bContext C, wmOperator op, wmEvent event)
 //int ED_operator_scene_editable(bContext *C)
 {
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	if(scene!=null && scene.id.lib==null)
 		return 1;
 	return 0;

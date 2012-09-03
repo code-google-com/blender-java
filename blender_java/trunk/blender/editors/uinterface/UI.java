@@ -48,7 +48,6 @@ import blender.makesdna.sdna.IDProperty;
 import blender.makesdna.sdna.Link;
 import blender.makesdna.sdna.ListBase;
 import blender.makesdna.sdna.Panel;
-import blender.makesdna.sdna.Scene;
 import blender.makesdna.sdna.ScrArea;
 import blender.makesdna.sdna.rctf;
 import blender.makesdna.sdna.rcti;
@@ -1304,7 +1303,7 @@ public static void ui_menu_block_set_keymaps(bContext C, uiBlock block)
 public static void uiEndBlock(bContext C, uiBlock block)
 {
 	uiBut but;
-	Scene scene= bContext.CTX_data_scene(C);
+	//Object scene= bContext.CTX_data_scene(C);
 
 	/* inherit flags from 'old' buttons that was drawn here previous, based
 	 * on matching buttons, we need this to make button event handling non
@@ -2466,11 +2465,11 @@ public static uiBlock uiBeginBlock(bContext C, ARegion region, String name, int 
 {
 	uiBlock block;
 	wmWindow window;
-	Scene scn;
+	//Object scn;
 	int[] getsizex={0}, getsizey={0};
 
 	window= bContext.CTX_wm_window(C);
-	scn = bContext.CTX_data_scene(C);
+	//scn = bContext.CTX_data_scene(C);
 
 	block= new uiBlock();
 	block.active= 1;

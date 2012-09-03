@@ -4205,7 +4205,7 @@ static boolean constraints_list_needinv(TransInfo t, ListBase list)
 /* transcribe given object into TransData for Transforming */
 static void ObjectToTransData(bContext C, TransInfo t, TransData td, bObject ob)
 {
-	Scene scene = bContext.CTX_data_scene(C);
+	Scene scene = (Scene)bContext.CTX_data_scene(C);
 	bObject track;
 	ListBase fakecons = new ListBase();
 	float[][] obmtx = new float[3][3];
@@ -4301,7 +4301,7 @@ static void ObjectToTransData(bContext C, TransInfo t, TransData td, bObject ob)
 /* it deselects Bases, so we have to call the clear function always after */
 static void set_trans_object_base_flags(bContext C, TransInfo t)
 {
-	Scene sce = bContext.CTX_data_scene(C);
+	Scene sce = (Scene)bContext.CTX_data_scene(C);
 	View3D v3d = (View3D)t.view;
 
 	/*
@@ -5229,7 +5229,7 @@ static void createTransObject(bContext C, TransInfo t)
 
 public static void createTransData(bContext C, TransInfo t)
 {
-	Scene scene = bContext.CTX_data_scene(C);
+	Scene scene = (Scene)bContext.CTX_data_scene(C);
 	bObject ob = (scene.basact!=null? scene.basact.object: null);
 
 	if (t.options == Transform.CTX_TEXTURE) {

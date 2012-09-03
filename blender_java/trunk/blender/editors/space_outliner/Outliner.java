@@ -2682,7 +2682,7 @@ public class Outliner {
 	public static wmOperatorType.Operator outliner_item_activate = new wmOperatorType.Operator() {
 	public int run(bContext C, wmOperator op, wmEvent event)
 	{
-		Scene scene= bContext.CTX_data_scene(C);
+		Scene scene= (Scene)bContext.CTX_data_scene(C);
 		ARegion ar= bContext.CTX_wm_region(C);
 		SpaceOops soops= bContext.CTX_wm_space_outliner(C);
 		TreeElement te;
@@ -11533,7 +11533,7 @@ public class Outliner {
 	public static void draw_outliner(GL2 gl, bContext C)
 	{
 		Main mainvar= bContext.CTX_data_main(C);
-		Scene scene= bContext.CTX_data_scene(C);
+		Scene scene= (Scene)bContext.CTX_data_scene(C);
 		ARegion ar= bContext.CTX_wm_region(C);
 		View2D v2d= ar.v2d;
 		SpaceOops soops= bContext.CTX_wm_space_outliner(C);

@@ -179,7 +179,7 @@ static void time_draw_idblock_keyframes(GL2 gl, View2D v2d, ID id, short onlysel
 /* draw keyframe lines for timeline */
 static void time_draw_keyframes(GL2 gl, bContext C, SpaceTime stime, ARegion ar)
 {
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	bObject ob= bContext.CTX_data_active_object(C);
 	View2D v2d= ar.v2d;
 	short onlysel= (short)(stime.flag & SpaceTypes.TIME_ONLYACTSEL);
@@ -245,7 +245,7 @@ public static ARegionType.Draw time_main_area_draw = new ARegionType.Draw() {
 public void run(GL2 gl, bContext C, ARegion ar)
 {
 	/* draw entirely, view changes should be handled here */
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	SpaceTime stime= bContext.CTX_wm_space_time(C);
 	View2D v2d= ar.v2d;
 	View2DGrid grid;
@@ -351,7 +351,7 @@ public void run(ARegion ar, wmNotifier wmn)
 public static SpaceType.New time_new = new SpaceType.New() {
 public SpaceLink run(bContext C)
 {
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	ARegion ar;
 	SpaceTime stime;
 

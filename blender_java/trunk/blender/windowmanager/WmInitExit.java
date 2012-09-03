@@ -131,10 +131,10 @@ public static void WM_init(bContext C, int argc, String[] argv)
 {
 	// this init method is taking too long
 	
-	if (G.background==0) {
+	//if (G.background==0) {
 		WmWindow.wm_ghost_init(C);	/* note: it assigns C to ghost! */
 //		wm_init_cursor_data();
-	}
+	//}
 //	GHOST_CreateSystemPaths();
 	WmOperators.wm_operatortype_init();
 	
@@ -178,12 +178,12 @@ public static void WM_init(bContext C, int argc, String[] argv)
 
 //	wm_init_reports(C); /* reports cant be initialized before the wm */
 
-	if (G.background==0) {
+	//if (G.background==0) {
 //		GPU_extensions_init();
 //		GPU_set_mipmap(!(U.gameflags & USER_DISABLE_MIPMAP));
 	
 		UI.UI_init();
-	}
+	//}
 	
 //	clear_matcopybuf();
 //	ED_render_clear_mtex_copybuf();

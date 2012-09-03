@@ -12,8 +12,8 @@ public class bScreen extends ID implements DNA, Cloneable { // #190
   public ListBase edgebase = new ListBase(); // 16
   public ListBase areabase = new ListBase(); // 16
   public ListBase regionbase = new ListBase(); // 16
-  public Scene scene; // ptr 1552
-  public Scene newscene; // ptr 1552
+  public Object scene; // ptr 1552
+  public Object newscene; // ptr 1552
   public int redraws_flag; // 4
   public int pad1; // 4
   public short full; // 2
@@ -38,8 +38,8 @@ public class bScreen extends ID implements DNA, Cloneable { // #190
     edgebase.read(buffer);
     areabase.read(buffer);
     regionbase.read(buffer);
-    scene = DNATools.link(DNATools.ptr(buffer), Scene.class); // get ptr
-    newscene = DNATools.link(DNATools.ptr(buffer), Scene.class); // get ptr
+    scene = DNATools.ptr(buffer); // get ptr
+    newscene = DNATools.ptr(buffer); // get ptr
     redraws_flag = buffer.getInt();
     pad1 = buffer.getInt();
     full = buffer.getShort();

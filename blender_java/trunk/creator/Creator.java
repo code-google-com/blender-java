@@ -1278,7 +1278,7 @@ public static void main(String[] argv) {
 	
 //	init_def_material();
 
-	if(G.background==0) {
+	//if(G.background==0) {
 //		Args.BLI_argsParse(ba, 2, null, null);
 //		Args.BLI_argsParse(ba, 3, null, null);
 
@@ -1290,7 +1290,7 @@ public static void main(String[] argv) {
 //#ifndef DISABLE_SDL
 //	BLI_setenv("SDL_VIDEODRIVER", "dummy");
 //#endif
-	}
+	//}
 //	else {
 //		Args.BLI_argsParse(ba, 3, null, null);
 //

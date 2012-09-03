@@ -1830,7 +1830,7 @@ public void run(GL2 gl, bContext C, ARegion ar)
 //void view3d_main_area_draw(const bContext *C, ARegion *ar)
 {
 //        System.out.println("view3d_main_area_draw");
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	View3D v3d = bContext.CTX_wm_view3d(C);
 	RegionView3D rv3d= bContext.CTX_wm_region_view3d(C);
 	Scene sce;

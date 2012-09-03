@@ -248,7 +248,7 @@ public static void wm_event_do_notifiers(bContext C)
 				}
 				else if(note.category==WmTypes.NC_SCENE) {
 					if(note.data==WmTypes.ND_SCENEBROWSE) {
-						ScreenEdit.ED_screen_set_scene(C, (Scene)note.reference);	// XXX hrms, think this over!
+//						ScreenEdit.ED_screen_set_scene(C, (Scene)note.reference);	// XXX hrms, think this over!
 						System.out.printf("scene set %p\n", note.reference);
 					}
 					else if(note.data==WmTypes.ND_FRAME)
@@ -299,9 +299,7 @@ public static void wm_event_do_notifiers(bContext C)
 
 	/* cached: editor refresh callbacks now, they get context */
 	for(win= (wmWindow)wm.windows.first; win!=null; win= win.next) {
-		Scene sce, scene= win.screen.scene;
 		ScrArea sa;
-		Base base;
 
 		bContext.CTX_wm_window_set(C, win);
 		for(sa= (ScrArea)win.screen.areabase.first; sa!=null; sa= sa.next) {
@@ -311,6 +309,8 @@ public static void wm_event_do_notifiers(bContext C)
 			}
 		}
 
+		Scene sce, scene= (Scene)win.screen.scene;
+		Base base;
 		if(G.rendering==0) { // XXX make lock in future, or separated derivedmesh users in scene
 
 			/* update all objects, ipos, matrices, displists, etc. Flags set by depgraph or manual,

@@ -879,7 +879,7 @@ public int run(bContext C, wmOperator op, wmEvent event)
 	ARegion ar= bContext.CTX_wm_region(C);
 	View3D v3d = bContext.CTX_wm_view3d(C);
 	RegionView3D rv3d= bContext.CTX_wm_region_view3d(C);
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	Base base;
 
 	boolean center= RnaAccess.RNA_boolean_get(op.ptr, "center");
@@ -965,7 +965,7 @@ public int run(bContext C, wmOperator op, wmEvent event)
 	ARegion ar= bContext.CTX_wm_region(C);
 	View3D v3d = bContext.CTX_wm_view3d(C);
 	RegionView3D rv3d= bContext.CTX_wm_region_view3d(C);
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	bObject ob= (scene.basact!=null? scene.basact.object: null);
 //	bObject obedit= bContext.CTX_data_edit_object(C);
         bObject obedit= null;
@@ -1421,7 +1421,7 @@ public int run(bContext C, wmOperator op, wmEvent unused)
 {
 	View3D v3d = bContext.CTX_wm_view3d(C);
 	RegionView3D rv3d= bContext.CTX_wm_region_view3d(C);
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 //	static int perspo=V3D_PERSP;
 	int viewnum;
 
@@ -1864,7 +1864,7 @@ public static wmOperatorType.Operator set_3dcursor_invoke = new wmOperatorType.O
 public int run(bContext C, wmOperator op, wmEvent event)
 //static int set_3dcursor_invoke(bContext *C, wmOperator *op, wmEvent *event)
 {
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	ARegion ar= bContext.CTX_wm_region(C);
 	View3D v3d = bContext.CTX_wm_view3d(C);
 	RegionView3D rv3d= bContext.CTX_wm_region_view3d(C);

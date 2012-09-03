@@ -31,7 +31,7 @@
 
 package blender.makesdna;
 
-import static blender.blenkernel.Blender.U;
+//import static blender.blenkernel.Blender.U;
 
 //#ifndef DNA_USERDEF_TYPES_H
 //#define DNA_USERDEF_TYPES_H
@@ -272,13 +272,13 @@ public static final int USER_NONEGFRAMES=		(1 << 24);
 public static final int USER_TXT_TABSTOSPACES_DISABLE=	(1 << 25);
 public static final int USER_TOOLTIPS_PYTHON=    (1 << 26);
 
-/* helper macro for checking frame clamping */
-public static final int FRAMENUMBER_MIN_CLAMP(int cfra)
-{
-	if ((U.flag & USER_NONEGFRAMES)!=0 && (cfra < 0))
-		return 0;
-	return cfra;
-}
+///* helper macro for checking frame clamping */
+//public static final int FRAMENUMBER_MIN_CLAMP(int cfra)
+//{
+//	if ((U.flag & USER_NONEGFRAMES)!=0 && (cfra < 0))
+//		return 0;
+//	return cfra;
+//}
 
 /* viewzom */
 public static final int USER_ZOOM_CONT=			0;

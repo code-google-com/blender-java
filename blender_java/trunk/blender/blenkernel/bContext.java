@@ -441,7 +441,7 @@ public static void CTX_wm_window_set(bContext C, wmWindow win)
 {
 	C.wm.window= win;
 	C.wm.screen= (win!=null)? win.screen: null;
-	C.data.scene= (C.wm.screen!=null)? C.wm.screen.scene: null;
+	C.data.scene= (C.wm.screen!=null)? (Scene)C.wm.screen.scene: null;
 	C.wm.area= null;
 	C.wm.region= null;
 }
@@ -449,7 +449,7 @@ public static void CTX_wm_window_set(bContext C, wmWindow win)
 public static void CTX_wm_screen_set(bContext C, bScreen screen)
 {
 	C.wm.screen= screen;
-	C.data.scene= (C.wm.screen!=null)? C.wm.screen.scene: null;
+	C.data.scene= (C.wm.screen!=null)? (Scene)C.wm.screen.scene: null;
 	C.wm.area= null;
 	C.wm.region= null;
 }
@@ -755,7 +755,7 @@ public static void CTX_data_main_set(bContext C, Main bmain)
 	C.data.main= bmain;
 }
 
-public static Scene CTX_data_scene(bContext C)
+public static Object CTX_data_scene(bContext C)
 {
 //	Scene scene;
 
@@ -831,14 +831,14 @@ public static String CTX_data_mode_string(bContext C)
 	return data_mode_strings[CTX_data_mode_enum(C)];
 }
 
-public static void CTX_data_scene_set(bContext C, Scene scene)
+public static void CTX_data_scene_set(bContext C, Object scene)
 {
-	C.data.scene= scene;
+	C.data.scene= (Scene)scene;
 }
 
 public static ToolSettings CTX_data_tool_settings(bContext C)
 {
-	Scene scene = bContext.CTX_data_scene(C);
+	Scene scene = (Scene)bContext.CTX_data_scene(C);
 
 	if(scene!=null)
 		return scene.toolsettings;

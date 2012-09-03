@@ -430,7 +430,7 @@ public static boolean createSpaceNormalTangent(float[][] mat, float[] normal, fl
 
 public static String BIF_menustringTransformOrientation(bContext C, String title) {
 	String menu = "%t|Global%x0|Local%x1|Normal%x2|View%x3";
-	ListBase transform_spaces = bContext.CTX_data_scene(C).transform_spaces;
+	ListBase transform_spaces = ((Scene)bContext.CTX_data_scene(C)).transform_spaces;
 	TransformOrientation ts;
 	int i = View3dTypes.V3D_MANIP_CUSTOM;
 //	char *str_menu, *p;
@@ -454,7 +454,7 @@ public static String BIF_menustringTransformOrientation(bContext C, String title
 }
 
 public static int BIF_countTransformOrientation(bContext C) {
-	ListBase transform_spaces = bContext.CTX_data_scene(C).transform_spaces;
+	ListBase transform_spaces = ((Scene)bContext.CTX_data_scene(C)).transform_spaces;
 	TransformOrientation ts;
 	int count = 0;
 
@@ -472,7 +472,7 @@ public static void applyTransformOrientation(bContext C, TransInfo t) {
 	int i;
 
 	if (selected_index >= 0) {
-		for (i = 0, ts = (TransformOrientation)bContext.CTX_data_scene(C).transform_spaces.first; ts!=null; ts = ts.next, i++) {
+		for (i = 0, ts = (TransformOrientation)((Scene)bContext.CTX_data_scene(C)).transform_spaces.first; ts!=null; ts = ts.next, i++) {
 			if (selected_index == i) {
 				StringUtil.strcpy(t.spacename,0, ts.name,0);
 				Arithb.Mat3CpyMat3(t.spacemtx, ts.mat);
@@ -597,7 +597,7 @@ public static void initTransformOrientation(bContext C, TransInfo t)
 
 public static int getTransformOrientation(bContext C, float[] normal, float[] plane, boolean activeOnly)
 {
-	Scene scene = bContext.CTX_data_scene(C);
+	Scene scene = (Scene)bContext.CTX_data_scene(C);
 	View3D v3d = bContext.CTX_wm_view3d(C);
 	bObject obedit= bContext.CTX_data_edit_object(C);
 	Base base;

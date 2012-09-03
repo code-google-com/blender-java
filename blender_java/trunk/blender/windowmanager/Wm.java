@@ -247,7 +247,7 @@ public static void wm_check(bContext C)
 	if(wm==null) return;
 	if(wm.windows.first==null) return;
 	
-	if (G.background==0) {
+	//if (G.background==0) {
 		/* case: fileread */
 		if((wm.initialized & WindowManagerTypes.WM_INIT_WINDOW) == 0) {
 			WM_keymap_init(C);
@@ -256,7 +256,7 @@ public static void wm_check(bContext C)
 
 		/* case: no open windows at all, for old file reads */
 		WmWindow.wm_window_add_ghostwindows(C, wm);
-	}
+	//}
 
 //	/* case: fileread */
 //	/* note: this runs in bg mode to set the screen context cb */

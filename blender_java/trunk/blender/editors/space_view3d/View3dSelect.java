@@ -134,7 +134,7 @@ public static void view3d_set_viewcontext(bContext C, ViewContext vc)
 //	memset(vc, 0, sizeof(ViewContext));
         vc.clear();
 	vc.ar= bContext.CTX_wm_region(C);
-	vc.scene= bContext.CTX_data_scene(C);
+	vc.scene= (Scene)bContext.CTX_data_scene(C);
 	vc.v3d= bContext.CTX_wm_view3d(C);
 	vc.rv3d= (RegionView3D)vc.ar.regiondata;
 //	vc.obact= bContext.CTX_data_active_object(C);
@@ -1005,7 +1005,7 @@ static void mouse_select(bContext C, int[] mval, boolean extend, boolean obcente
 	ViewContext vc = new ViewContext();
 	ARegion ar= bContext.CTX_wm_region(C);
 	View3D v3d= bContext.CTX_wm_view3d(C);
-	Scene scene= bContext.CTX_data_scene(C);
+	Scene scene= (Scene)bContext.CTX_data_scene(C);
 	Base base, startbase=null, basact=null, oldbasact=null;
 //	unsigned int buffer[4*MAXPICKBUF];
    // IntBuffer buffer = BufferUtil.newIntBuffer(4*View3dStruct.MAXPICKBUF);

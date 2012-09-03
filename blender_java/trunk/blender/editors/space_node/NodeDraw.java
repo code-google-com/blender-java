@@ -1082,7 +1082,7 @@ public class NodeDraw {
 	{
 		View2DScrollers scrollers;
 		SpaceNode snode= bContext.CTX_wm_space_node(C);
-		Scene scene= bContext.CTX_data_scene(C);
+		Scene scene= (Scene)bContext.CTX_data_scene(C);
 		int color_manage = scene.r.color_mgt_flag & SceneTypes.R_COLOR_MANAGEMENT;
 		
 		Resources.UI_ThemeClearColor(gl, Resources.TH_BACK);

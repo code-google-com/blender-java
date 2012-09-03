@@ -846,7 +846,7 @@ public static void resetTransRestrictions(TransInfo t)
 
 public static int initTransInfo(bContext C, TransInfo t, wmOperator op, wmEvent event)
 {
-	Scene sce = bContext.CTX_data_scene(C);
+	Scene sce = (Scene)bContext.CTX_data_scene(C);
 	ToolSettings ts = bContext.CTX_data_tool_settings(C);
 	ARegion ar = bContext.CTX_wm_region(C);
 	ScrArea sa = bContext.CTX_wm_area(C);
