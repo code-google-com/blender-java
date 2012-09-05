@@ -385,7 +385,7 @@ static void ui_apply_but_funcs_after(bContext C)
 		if (after.opptr==null) {
 			System.out.println("invalid after popinter");
 		}
-		if (after.opptr!=null && after.opptr.id==null) {
+		if (after.opptr!=null && after.opptr.getId()==null) {
 			System.out.println("invalid after popinter id");
 		}
 

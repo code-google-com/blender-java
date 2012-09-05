@@ -385,8 +385,8 @@ public static void setup_app_data(bContext C, BlendFileData bfd, String filename
 	}
 
 	/* special cases, override loaded flags: */
-	if ((G.f & Global.G_DEBUG)!=0) bfd.globalf |= Global.G_DEBUG;
-	else bfd.globalf &= ~Global.G_DEBUG;
+//	if ((G.f & Global.G_DEBUG)!=0) bfd.globalf |= Global.G_DEBUG;
+//	else bfd.globalf &= ~Global.G_DEBUG;
 	if ((G.f & Global.G_SWAP_EXCHANGE)!=0) bfd.globalf |= Global.G_SWAP_EXCHANGE;
 	else bfd.globalf &= ~Global.G_SWAP_EXCHANGE;
 

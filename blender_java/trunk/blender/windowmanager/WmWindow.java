@@ -27,8 +27,6 @@
  */
 package blender.windowmanager;
 
-import static blender.blenkernel.Blender.G;
-
 import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
 

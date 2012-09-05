@@ -31,6 +31,8 @@
  */
 package blender.editors.uinterface;
 
+import java.net.URL;
+
 import blender.blenlib.Arithb;
 import blender.blenlib.ListBaseUtil;
 import blender.blenlib.StringUtil;
@@ -1521,8 +1523,9 @@ public static final int BIFNICONIDS= BIFIconID.BIFICONID_LAST.ordinal() - BIFICO
     public static int theme_spacetype = SpaceTypes.SPACE_VIEW3D;
     public static int theme_regionid= ScreenTypes.RGN_TYPE_WINDOW;
 
-    public static void ui_resources_init() {
-        UIIcons.UI_icons_init(BIFIconID.BIFICONID_LAST.ordinal(), ResourceAnchor.class.getClassLoader().getResource("resources/icons/blenderbuttons.png"));
+    public static void ui_resources_init(URL url) {
+        //UIIcons.UI_icons_init(BIFIconID.BIFICONID_LAST.ordinal(), ResourceAnchor.class.getClassLoader().getResource("resources/icons/blenderbuttons.png"));
+        UIIcons.UI_icons_init(BIFIconID.BIFICONID_LAST.ordinal(), url);
     }
 
 //void ui_resources_free(void)

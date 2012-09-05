@@ -1113,7 +1113,7 @@ public static void ED_screen_refresh(GL2 gl, wmWindowManager wm, wmWindow win)
 }
 
 /* file read, set all screens, ... */
-public static void ED_screens_initialize(GL2 gl, wmWindowManager wm)
+public static void ED_screens_initialize(GL2 gl, bContext C, wmWindowManager wm)
 //public static void ED_screens_initialize(wmWindowManager wm)
 {
 	wmWindow win;
@@ -1121,7 +1121,8 @@ public static void ED_screens_initialize(GL2 gl, wmWindowManager wm)
 	for(win= (wmWindow)wm.windows.first; win!=null; win= win.next) {
 
 		if(win.screen==null)
-			win.screen= G.main.screen.first;
+			//win.screen= G.main.screen.first;
+			win.screen= bContext.CTX_data_main_screen_list(C).first;
 
 		ED_screen_refresh(gl, wm, win);
 //		ED_screen_refresh(wm, win);
@@ -1304,7 +1305,7 @@ public static void ED_screen_set(GL2 gl, bContext C, bScreen sc)
 	ID id;
 
 	/* validate screen, it's called with notifier reference */
-	for(id= (ID)bContext.CTX_data_main(C).screen.first; id!=null; id= (ID)id.next)
+	for(id= (ID)bContext.CTX_data_main_screen_list(C).first; id!=null; id= (ID)id.next)
 		if(sc == (bScreen)id)
 			break;
 	if(id==null)
@@ -1316,7 +1317,7 @@ public static void ED_screen_set(GL2 gl, bContext C, bScreen sc)
 
 	if(sc.full!=0) {				/* find associated full */
 		bScreen sc1;
-		for(sc1= (bScreen)bContext.CTX_data_main(C).screen.first; sc1!=null; sc1= (bScreen)sc1.id.next) {
+		for(sc1= (bScreen)bContext.CTX_data_main_screen_list(C).first; sc1!=null; sc1= (bScreen)sc1.id.next) {
 			ScrArea sa= (ScrArea)sc1.areabase.first;
 			if(sa.full==sc) {
 				sc= sc1;
@@ -1357,7 +1358,7 @@ public static void ED_screen_set_scene(bContext C, Scene scene)
 	bScreen sc;
 	bScreen curscreen= bContext.CTX_wm_screen(C);
 
-	for(sc= (bScreen)bContext.CTX_data_main(C).screen.first; sc!=null; sc= (bScreen)sc.id.next) {
+	for(sc= (bScreen)bContext.CTX_data_main_screen_list(C).first; sc!=null; sc= (bScreen)sc.id.next) {
 		if((U.flag & UserDefTypes.USER_SCENEGLOBAL)!=0 || sc==curscreen) {
 
 			if(scene != sc.scene) {
@@ -1376,7 +1377,7 @@ public static void ED_screen_set_scene(bContext C, Scene scene)
 	//  copy_view3d_lock(0);	/* space.c */
 
 	/* are there cameras in the views that are not in the scene? */
-	for(sc= (bScreen)bContext.CTX_data_main(C).screen.first; sc!=null; sc= (bScreen)sc.id.next) {
+	for(sc= (bScreen)bContext.CTX_data_main_screen_list(C).first; sc!=null; sc= (bScreen)sc.id.next) {
 		if( (U.flag & UserDefTypes.USER_SCENEGLOBAL)!=0 || sc==curscreen) {
 			ScrArea sa= (ScrArea)sc.areabase.first;
 			while(sa!=null) {

@@ -1633,7 +1633,7 @@ public int run(bContext C, wmOperator op, wmEvent event)
 {
 	bScreen screen= bContext.CTX_wm_screen(C);
 	ScrArea sa= bContext.CTX_wm_area(C);
-	int tot= ListBaseUtil.BLI_countlist(bContext.CTX_data_main(C).screen);
+	int tot= ListBaseUtil.BLI_countlist(bContext.CTX_data_main_screen_list(C));
 	int delta= RnaAccess.RNA_int_get(op.ptr, "delta");
 
 	/* this screen is 'fake', solve later XXX */
@@ -1643,7 +1643,7 @@ public int run(bContext C, wmOperator op, wmEvent event)
 	if(delta==1) {
 		while((tot--)!=0) {
 			screen= (bScreen)screen.id.next;
-			if(screen==null) screen= bContext.CTX_data_main(C).screen.first;
+			if(screen==null) screen= bContext.CTX_data_main_screen_list(C).first;
 			if(screen.winid==0 && screen.full==0)
 				break;
 		}
@@ -1651,7 +1651,7 @@ public int run(bContext C, wmOperator op, wmEvent event)
 	else if(delta== -1) {
 		while((tot--)!=0) {
 			screen= (bScreen)screen.id.prev;
-			if(screen==null) screen= bContext.CTX_data_main(C).screen.last;
+			if(screen==null) screen= bContext.CTX_data_main_screen_list(C).last;
 			if(screen.winid==0 && screen.full==0)
 				break;
 		}

@@ -25,7 +25,6 @@ package blender.editors.uinterface;
 
 //#include <limits.h>
 
-import static blender.blenkernel.Blender.G;
 import blender.blenkernel.Pointer;
 import blender.blenkernel.UtilDefines;
 import blender.blenkernel.bContext;
@@ -523,14 +522,14 @@ public static void ui_item_enum_expand(uiLayout layout, uiBlock block, PointerRN
 	for(a=0; a<totitem[0]; a++) {
 //		if(!item[a].identifier[0])
 //		if(item[0][a].identifier == null || item[0][a].identifier.equals(""))
-		if(StringUtil.toCString(item[0][a].identifier)[0]==0)
+		if(StringUtil.toCString(item[0][a].getIdentifier())[0]==0)
 			continue;
 
 //		name= (!uiname || uiname[0])? (char*)item[a].name: "";
 //		name= (uiname==null || !uiname.equals(""))? (String)item[0][a].name: "";
-		name= (uiname==null || StringUtil.toCString(uiname)[0]!=0)? (String)item[0][a].name: "";
-		icon= item[0][a].icon;
-		value= item[0][a].value;
+		name= (uiname==null || StringUtil.toCString(uiname)[0]!=0)? (String)item[0][a].getName(): "";
+		icon= item[0][a].getIcon();
+		value= item[0][a].getValue();
 		itemw= ui_text_icon_width(block.curlayout, StringUtil.toCString(name), icon, 0);
 
 //		if(icon && strcmp(name, "") != 0 && !icon_only)
@@ -709,7 +708,7 @@ public static PointerRNA uiItemFullO(uiLayout layout, String idname, String name
 
 	if(ot==null) {
 		ui_item_disabled(layout, idname);
-		return RnaAccess.PointerRNA_NULL;
+		return RnaAccess.PointerRNA_NULL();
 	}
 
 	if(name==null)
@@ -745,18 +744,18 @@ public static PointerRNA uiItemFullO(uiLayout layout, String idname, String name
 		PointerRNA opptr= UI.uiButGetOperatorPtrRNA(but);
 		
 		if (properties!=null) {
-			opptr.data= properties;
+			opptr.setData(properties);
 		}
 		else {
 //			IDPropertyTemplate val = {0};
 //			opptr->data= IDP_New(IDP_GROUP, val, "wmOperatorProperties");
-			opptr.data= new IDProperty();
+			opptr.setData(new IDProperty());
 		}
 		
 		return opptr;
 	}
 	
-	return RnaAccess.PointerRNA_NULL;
+	return RnaAccess.PointerRNA_NULL();
 }
 
 public static String ui_menu_enumpropname(uiLayout layout, String opname, String propname, int retval)
@@ -799,7 +798,7 @@ public static void uiItemEnumO(uiLayout layout, String opname, String name, int 
 	if(name==null)
 		name= ui_menu_enumpropname(layout, opname, propname, value);
 
-	uiItemFullO(layout, opname, name, icon, (IDProperty)ptr.data, layout.root.opcontext, 0);
+	uiItemFullO(layout, opname, name, icon, (IDProperty)ptr.getData(), layout.root.opcontext, 0);
 }
 
 public static void uiItemsFullEnumO(uiLayout layout, String opname, String propname, IDProperty properties, int context, int flag)
@@ -829,7 +828,7 @@ public static void uiItemsFullEnumO(uiLayout layout, String opname, String propn
 
 		for(i=0; i<totitem[0]; i++) {
 //			if(item[0][i].identifier[0]) {
-			if(!item[0][i].identifier.isEmpty()) {
+			if(!item[0][i].getIdentifier().isEmpty()) {
 				if(properties!=null) {
 //					PointerRNA tptr;
 //
@@ -844,17 +843,17 @@ public static void uiItemsFullEnumO(uiLayout layout, String opname, String propn
 //					uiItemFullO(column, opname, (char*)item[i].name, item[i].icon, tptr.data, context, flag);
 				}
 				else
-					uiItemEnumO(column, opname, (String)item[0][i].name, item[0][i].icon, propname, item[0][i].value);
+					uiItemEnumO(column, opname, (String)item[0][i].getName(), item[0][i].getIcon(), propname, item[0][i].getValue());
 			}
 			else {
-				if(item[0][i].name!=null) {
+				if(item[0][i].getName()!=null) {
 					if(i != 0) {
 						column= uiLayoutColumn(split, 0);
 						/* inconsistent, but menus with labels do not look good flipped */
 						block.flag |= UI.UI_BLOCK_NO_FLIP;
 					}
 
-					uiItemL(column, (String)item[0][i].name, UI.ICON_NULL);
+					uiItemL(column, (String)item[0][i].getName(), UI.ICON_NULL);
 					bt= block.buttons.last;
 					bt.flag= UI.UI_TEXT_LEFT;
 				}
@@ -918,7 +917,7 @@ public static void uiItemEnumO_string(uiLayout layout, String name, int icon, St
 		RnaAccess.RNA_property_enum_items((bContext)layout.root.block.evil_C, ptr, prop, item, null, free);
 		if(RnaAccess.RNA_enum_value_from_id(item[0],0, value_str, value)==false) {
 //			if(free) MEM_freeN(item);
-			System.out.printf("uiItemEnumO_string: %s.%s, enum %s not found.\n", RnaAccess.RNA_struct_identifier(ptr.type), propname, value_str);
+			System.out.printf("uiItemEnumO_string: %s.%s, enum %s not found.\n", RnaAccess.RNA_struct_identifier(ptr.getTypeStruct()), propname, value_str);
 			return;
 		}
 
@@ -926,7 +925,7 @@ public static void uiItemEnumO_string(uiLayout layout, String name, int icon, St
 //			MEM_freeN(item);
 	}
 	else {
-		System.out.printf("uiItemEnumO_string: %s.%s not found.\n", RnaAccess.RNA_struct_identifier(ptr.type), propname);
+		System.out.printf("uiItemEnumO_string: %s.%s not found.\n", RnaAccess.RNA_struct_identifier(ptr.getTypeStruct()), propname);
 		return;
 	}
 
@@ -936,7 +935,7 @@ public static void uiItemEnumO_string(uiLayout layout, String name, int icon, St
 	if(name==null)
 		name= ui_menu_enumpropname(layout, opname, propname, value[0]);
 
-	uiItemFullO(layout, opname, name, icon, (IDProperty)ptr.data, layout.root.opcontext, 0);
+	uiItemFullO(layout, opname, name, icon, (IDProperty)ptr.getData(), layout.root.opcontext, 0);
 }
 
 public static void uiItemBooleanO(uiLayout layout, String name, int icon, String opname, String propname, boolean value)
@@ -946,7 +945,7 @@ public static void uiItemBooleanO(uiLayout layout, String name, int icon, String
 	WmOperators.WM_operator_properties_create(ptr, opname);
 	RnaAccess.RNA_boolean_set(ptr, propname, value);
 
-	uiItemFullO(layout, opname, name, icon, (IDProperty)ptr.data, layout.root.opcontext, 0);
+	uiItemFullO(layout, opname, name, icon, (IDProperty)ptr.getData(), layout.root.opcontext, 0);
 }
 
 //void uiItemIntO(uiLayout *layout, char *name, int icon, char *opname, char *propname, int value)
@@ -1140,7 +1139,7 @@ public static void uiItemR(uiLayout layout, PointerRNA ptr, String propname, int
 
 	if(prop==null) {
 		ui_item_disabled(layout, propname);
-		System.out.printf("uiItemR: property not found: %s.%s\n", RnaAccess.RNA_struct_identifier(ptr.type), propname);
+		System.out.printf("uiItemR: property not found: %s.%s\n", RnaAccess.RNA_struct_identifier(ptr.getTypeStruct()), propname);
 		return;
 	}
 
@@ -1271,15 +1270,16 @@ public static void search_id_collection(StructRNA ptype, PointerRNA ptr, Propert
 	StructRNA srna;
 
 	/* look for collection property in Main */
-	RnaAccess.RNA_main_pointer_create(G.main, ptr);
+	//RnaAccess.RNA_main_pointer_create(G.main, ptr);
+	RnaAccess.RNA_main_pointer_create(ptr);
 
 	prop[0]= null;
 
 //	RNA_STRUCT_BEGIN(ptr, iprop)
 	{
 		CollectionPropertyIterator rna_macro_iter = new CollectionPropertyIterator();
-		for(RnaAccess.RNA_property_collection_begin(ptr, RnaAccess.RNA_struct_iterator_property(ptr.type), rna_macro_iter); rna_macro_iter.valid; RnaAccess.RNA_property_collection_next(rna_macro_iter)) {
-			PropertyRNA iprop= (PropertyRNA)rna_macro_iter.ptr.data;
+		for(RnaAccess.RNA_property_collection_begin(ptr, RnaAccess.RNA_struct_iterator_property(ptr.getTypeStruct()), rna_macro_iter); rna_macro_iter.valid; RnaAccess.RNA_property_collection_next(rna_macro_iter)) {
+			PropertyRNA iprop= (PropertyRNA)rna_macro_iter.ptr.getData();
 			{
 				/* if it's a collection and has same pointer type, we've got it */
 				if(RnaAccess.RNA_property_type(iprop) == RNATypes.PROP_COLLECTION) {
@@ -1338,7 +1338,7 @@ public static void uiItemPointerR(uiLayout layout, PointerRNA ptr, String propna
 	prop= RnaAccess.RNA_struct_find_property(ptr, StringUtil.toCString(propname),0);
 
 	if(prop==null) {
-		System.out.printf("uiItemPointerR: property not found: %s.%s\n", RnaAccess.RNA_struct_identifier(ptr.type), propname);
+		System.out.printf("uiItemPointerR: property not found: %s.%s\n", RnaAccess.RNA_struct_identifier(ptr.getTypeStruct()), propname);
 		return;
 	}
 	
@@ -1352,11 +1352,11 @@ public static void uiItemPointerR(uiLayout layout, PointerRNA ptr, String propna
 
 
 	if(searchprop==null) {
-		System.out.printf("uiItemPointerR: search collection property not found: %s.%s\n", RnaAccess.RNA_struct_identifier(ptr.type), searchpropname);
+		System.out.printf("uiItemPointerR: search collection property not found: %s.%s\n", RnaAccess.RNA_struct_identifier(ptr.getTypeStruct()), searchpropname);
 		return;
 	}
 	else if (RnaAccess.RNA_property_type(searchprop) != RNATypes.PROP_COLLECTION) {
-		System.out.printf("uiItemPointerR: search collection property is not a collection type: %s.%s\n", RnaAccess.RNA_struct_identifier(ptr.type), searchpropname);
+		System.out.printf("uiItemPointerR: search collection property is not a collection type: %s.%s\n", RnaAccess.RNA_struct_identifier(ptr.getTypeStruct()), searchpropname);
 		return;
 	}
 

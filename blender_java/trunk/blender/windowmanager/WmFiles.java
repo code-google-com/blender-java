@@ -129,7 +129,7 @@ public static void wm_window_match_do(bContext C, ListBase<wmWindowManager> oldw
 //			System.out.println("2- no current wm, but read wm: that's OK, do nothing");
 		}
 		else {
-			Wm.wm_add_default(C, (wmWindowManager)LibraryUtil.alloc_libblock(bContext.CTX_data_main(C).wm, DNA_ID.ID_WM, StringUtil.toCString("WinMan"),0));
+			Wm.wm_add_default(C, (wmWindowManager)LibraryUtil.alloc_libblock(bContext.CTX_data_main_wm_list(C), DNA_ID.ID_WM, StringUtil.toCString("WinMan"),0));
 //			System.out.println("1- no current wm, no read wm: make new default");
 		}
 	}
@@ -162,7 +162,7 @@ public static void wm_window_match_do(bContext C, ListBase<wmWindowManager> oldw
 			G.main.wm= oldwmlist.copy();
 
 			/* screens were read from file! */
-			ScreenEdit.ED_screens_initialize((GL2)GLU.getCurrentGL(), G.main.wm.first);
+			ScreenEdit.ED_screens_initialize((GL2)GLU.getCurrentGL(), C, G.main.wm.first);
 //			ScreenEdit.ED_screens_initialize(G.main.wm.first);
 		}
 		else {

@@ -54,7 +54,8 @@ public class Global {
 	/* strings of recent opend files */
 	public ListBase<RecentFile> recent_files = new ListBase<RecentFile>();
 
-	public short afbreek, moving;
+//	public short afbreek;
+	public short moving;
 //	public short background;
 	public short winpos, displaymode;	/* used to be in Render */
 	public short rendering;			/* to indicate render is busy, prevent renderwindow events etc */
@@ -107,7 +108,7 @@ public class Global {
 
 	/* #define G_FACESELECT	(1 <<  8) use (mesh->editflag & ME_EDIT_PAINT_MASK) */
 
-	public static final int G_DEBUG=			(1 << 12);
+//	public static final int G_DEBUG=			(1 << 12);
 	public static final int G_SCRIPT_AUTOEXEC= (1 << 13);
 	public static final int G_SCRIPT_OVERRIDE_PREF= (1 << 14); /* when this flag is set ignore the userprefs */
 

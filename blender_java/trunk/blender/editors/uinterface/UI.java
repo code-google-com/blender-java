@@ -28,6 +28,8 @@ package blender.editors.uinterface;
 
 import static blender.blenkernel.Blender.U;
 
+import java.net.URL;
+
 import javax.media.opengl.GL2;
 
 import blender.blenfont.Blf;
@@ -1281,7 +1283,7 @@ public static void ui_menu_block_set_keymaps(bContext C, uiBlock block)
 
 	for(but=block.buttons.first; but!=null; but=but.next) {
 		if(but.optype!=null) {
-			prop= (but.opptr!=null)? (IDProperty)but.opptr.data: null;
+			prop= (but.opptr!=null)? (IDProperty)but.opptr.getData(): null;
 
 			if(WmKeymap.WM_key_event_operator_string(C, but.optype.idname, but.opcontext, prop, buf, buf.length)!=null) {
 //				butstr= MEM_mallocN(strlen(but.str)+strlen(buf)+2, "menu_block_set_keymaps");
@@ -3067,19 +3069,19 @@ public static uiBut ui_def_but_rna(uiBlock block, int type, int retval, String s
 				dynstr= new StringBuilder();
 				dynstr.append(String.format("%s%%t", RnaAccess.RNA_property_ui_name(prop)));
 				for(i=0; i<totitem[0]; i++) {
-					if(StringUtil.toCString(item[0][i].identifier)[0]==0) {
-						if(item[0][i].name!=null)
-							dynstr.append(String.format("|%s%%l", item[0][i].name));
+					if(StringUtil.toCString(item[0][i].getIdentifier())[0]==0) {
+						if(item[0][i].getName()!=null)
+							dynstr.append(String.format("|%s%%l", item[0][i].getName()));
 						else
 							dynstr.append("|%l");
 					}
-					else if(item[0][i].icon!=0)
-						dynstr.append(String.format("|%s %%i%d %%x%d", item[0][i].name, item[0][i].icon, item[0][i].value));
+					else if(item[0][i].getIcon()!=0)
+						dynstr.append(String.format("|%s %%i%d %%x%d", item[0][i].getName(), item[0][i].getIcon(), item[0][i].getValue()));
 					else
-						dynstr.append(String.format("|%s %%x%d", item[0][i].name, item[0][i].value));
+						dynstr.append(String.format("|%s %%x%d", item[0][i].getName(), item[0][i].getValue()));
 
-					if(value == item[0][i].value)
-						icon= item[0][i].icon;
+					if(value == item[0][i].getValue())
+						icon= item[0][i].getIcon();
 				}
 				str= dynstr.toString();
 
@@ -3096,9 +3098,9 @@ public static uiBut ui_def_but_rna(uiBlock block, int type, int retval, String s
 				RnaAccess.RNA_property_enum_items((bContext)block.evil_C, ptr, prop, item, totitem, free);
 				for(i=0; i<totitem[0]; i++) {
 //					if(item[0][i].identifier[0] && item[0][i].value == (int)max) {
-					if(StringUtil.toCString(item[0][i].identifier)[0]!=0 && item[0][i].value == (int)max) {
-						str= (String)item[0][i].name;
-						icon= item[0][i].icon;
+					if(StringUtil.toCString(item[0][i].getIdentifier())[0]!=0 && item[0][i].getValue() == (int)max) {
+						str= (String)item[0][i].getName();
+						icon= item[0][i].getIcon();
 					}
 				}
 
@@ -3966,9 +3968,9 @@ public static uiBut uiDefSearchBut(uiBlock block, Pointer arg, int retval, BIFIc
 
 /* Program Init/Exit */
 
-public static void UI_init()
+public static void UI_init(URL url)
 {
-	Resources.ui_resources_init();
+	Resources.ui_resources_init(url);
 }
 
 /* after reading userdef file */

@@ -755,6 +755,16 @@ public static void CTX_data_main_set(bContext C, Main bmain)
 	C.data.main= bmain;
 }
 
+public static ListBase<bScreen> CTX_data_main_screen_list(bContext C)
+{
+		return C.data.main.screen;
+}
+
+public static ListBase<wmWindowManager> CTX_data_main_wm_list(bContext C)
+{
+		return C.data.main.wm;
+}
+
 public static Object CTX_data_scene(bContext C)
 {
 //	Scene scene;

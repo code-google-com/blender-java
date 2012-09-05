@@ -27,8 +27,8 @@ import java.util.Arrays;
 
 import org.python.core.PyType;
 
+import static blender.blenkernel.Blender.G;
 import blender.blenkernel.IdProp;
-import blender.blenkernel.Main;
 import blender.blenkernel.UtilDefines;
 import blender.blenkernel.bContext;
 import blender.blenkernel.IdProp.IDPropertyTemplate;
@@ -635,13 +635,19 @@ public static void RNA_init()
 //PointerRNA PointerRNA_NULL = {{0}, 0, 0};
 public static final PointerRNA PointerRNA_NULL= new PointerRNA();
 
-public static void RNA_main_pointer_create(Main main, PointerRNA r_ptr)
+public static PointerRNA PointerRNA_NULL() {
+	return PointerRNA_NULL;
+}
+
+//public static void RNA_main_pointer_create(Main main, PointerRNA r_ptr)
+public static void RNA_main_pointer_create(PointerRNA r_ptr)
 {
 	r_ptr.id.data= null;
 //	r_ptr.type= RNA_Main;
 	r_ptr.type= new StructRNA();
 	r_ptr.type.py_type= PyType.fromClass(RnaBlendData.class);
-	r_ptr.data= main;
+//	r_ptr.data= main;
+	r_ptr.data= G.main;
 }
 
 public static void RNA_id_pointer_create(ID id, PointerRNA r_ptr)

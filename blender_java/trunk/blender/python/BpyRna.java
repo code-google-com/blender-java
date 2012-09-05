@@ -4720,7 +4720,8 @@ public class BpyRna {
 		PointerRNA ptr = new PointerRNA();
 
 		/* for now, return the base RNA type rather then a real module */
-		RnaAccess.RNA_main_pointer_create(G.main, ptr);
+		//RnaAccess.RNA_main_pointer_create(G.main, ptr);
+		RnaAccess.RNA_main_pointer_create(ptr);
 //		pyrna= (BPy_StructRNA *)pyrna_struct_CreatePyObject(ptr);
 		pyrna= (PyObject)pyrna_struct_CreatePyObject(ptr);
 		

@@ -484,7 +484,7 @@ public StructRNA run(bContext C, ReportList reports, Object data, String identif
 
 	/* update while blender is running */
 	if(C != null)
-		WmEventSystem.WM_main_add_notifier(WmTypes.NC_SCREEN|WmTypes.NA_EDITED, null);
+		WmEventSystem.WM_main_add_notifier(C, WmTypes.NC_SCREEN|WmTypes.NA_EDITED, null);
 
 	return dummyot.ext.srna;
 }

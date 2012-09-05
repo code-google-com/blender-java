@@ -86,6 +86,26 @@ public static class PointerRNA extends PyObject {
     	this.type = type;
     	this.data = data;
     }
+    
+    public Object getData() {
+		return data;
+	}
+    
+    public void setData(Object d) {
+		data = d;
+	}
+    
+    public Object getId() {
+		return id;
+	}
+    
+    public StructRNA getTypeStruct() {
+		return type;
+	}
+    
+    public void setTypeStruct(StructRNA t) {
+		type = t;
+	}
 };
 
 ///* Property */
@@ -351,6 +371,22 @@ public static class EnumPropertyItem {
     	}
     	return null;
     }
+    
+    public String getIdentifier() {
+		return identifier;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public int getValue() {
+		return value;
+	}
+	
+	public int getIcon() {
+		return icon;
+	}
 };
 
 //typedef EnumPropertyItem *(*EnumPropertyItemFunc)(struct bContext *C, PointerRNA *ptr, int *free);

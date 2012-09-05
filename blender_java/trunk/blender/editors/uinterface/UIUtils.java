@@ -132,9 +132,9 @@ public class UIUtils {
 				int _icon;
 
 				pptr= RnaAccess.RNA_property_pointer_get(ptr, prop);
-				if(pptr.type==null)
-					pptr.type= RnaAccess.RNA_property_pointer_type(ptr, prop);
-				_icon= RnaAccess.RNA_struct_ui_icon(pptr.type);
+				if(pptr.getTypeStruct()==null)
+					pptr.setTypeStruct(RnaAccess.RNA_property_pointer_type(ptr, prop));
+				_icon= RnaAccess.RNA_struct_ui_icon(pptr.getTypeStruct());
 				if(_icon == BIFIconID.ICON_DOT.ordinal())
 					_icon= 0;
 

@@ -31,6 +31,8 @@ package blender.windowmanager;
 
 import org.python.core.PySystemState;
 
+import resources.ResourceAnchor;
+
 import blender.blenkernel.bContext;
 import blender.editors.screen.ScreenEdit;
 import blender.editors.space_api.SpaceTypeUtil;
@@ -182,7 +184,7 @@ public static void WM_init(bContext C, int argc, String[] argv)
 //		GPU_extensions_init();
 //		GPU_set_mipmap(!(U.gameflags & USER_DISABLE_MIPMAP));
 	
-		UI.UI_init();
+		UI.UI_init(ResourceAnchor.class.getClassLoader().getResource("resources/icons/blenderbuttons.png"));
 	//}
 	
 //	clear_matcopybuf();
@@ -345,7 +347,8 @@ public void run(bContext C)
 //
 //	SYS_DeleteSystem(SYS_GetSystem());
 
-	new Thread(new Runnable() { public void run() { System.exit(G.afbreek==1 ? 1 : 0); } }).start();
+	//new Thread(new Runnable() { public void run() { System.exit(G.afbreek==1 ? 1 : 0); } }).start();
+	new Thread(new Runnable() { public void run() { System.exit(0); } }).start();
 }
 };
 

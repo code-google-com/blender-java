@@ -29,8 +29,6 @@ package blender.windowmanager;
 
 //#include "DNA_windowmanager_types.h"
 
-import static blender.blenkernel.Blender.G;
-
 import javax.media.opengl.GL2;
 
 import blender.blenkernel.bContext;
@@ -90,7 +88,7 @@ public static void WM_operator_free(wmOperator op)
 //	}
 	
 	if(op.ptr!=null) {
-		op.properties= (IDProperty)((PointerRNA)op.ptr).data;
+		op.properties= (IDProperty)((PointerRNA)op.ptr).getData();
 //		MEM_freeN(op.ptr);
         op.ptr = null;
 	}
@@ -241,7 +239,7 @@ public static void wm_check(bContext C)
 
 	/* wm context */
 	if(wm==null) {
-		wm= bContext.CTX_data_main(C).wm.first;
+		wm= bContext.CTX_data_main_wm_list(C).first;
 		bContext.CTX_wm_manager_set(C, wm);
 	}
 	if(wm==null) return;
@@ -272,7 +270,7 @@ public static void WM_init(GL2 gl, bContext C) {
 	/* note: this runs in bg mode to set the screen context cb */
 	wmWindowManager wm= bContext.CTX_wm_manager(C);
 	if((wm.initialized & WindowManagerTypes.WM_INIT_WINDOW) == 0) {
-		ScreenEdit.ED_screens_initialize(gl, wm);
+		ScreenEdit.ED_screens_initialize(gl, C, wm);
 //		ScreenEdit.ED_screens_initialize(wm);
 		wm.initialized |= WindowManagerTypes.WM_INIT_WINDOW;
 	}

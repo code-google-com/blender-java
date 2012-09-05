@@ -29,14 +29,7 @@
 */
 package blender.blenkernel;
 
-import blender.makesdna.DNA_ID;
 import blender.makesdna.sdna.ID;
-import blender.makesdna.sdna.Image;
-import blender.makesdna.sdna.Lamp;
-import blender.makesdna.sdna.Material;
-import blender.makesdna.sdna.PreviewImage;
-import blender.makesdna.sdna.Tex;
-import blender.makesdna.sdna.World;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,6 +37,13 @@ import java.util.Map;
  Resizable Icons for Blender
 */
 public class Icons {
+	
+	/* GS reads the memory pointed at in a specific ordering.
+    only use this definition, makes little and big endian systems
+    work fine, in conjunction with MAKE_ID */
+	 private static final short GS(byte[] a) {
+	     return (short) (((a[0] & 0xFF) << 8) | ((a[1] & 0xFF) << 0));
+	 }
 
 //typedef void (*DrawInfoFreeFP) (void *drawinfo);
 
@@ -262,7 +262,7 @@ public class Icons {
         new_icon = new Icon();
 
         new_icon.obj = id;
-        new_icon.type = LibraryUtil.GS(id.name);
+        new_icon.type = GS(id.name);
 
         /* next two lines make sure image gets created */
         new_icon.drawinfo = null;

@@ -182,10 +182,10 @@ public static void WM_event_add_notifier(bContext C, int type, Object reference)
 	note.reference= reference;
 }
 
-public static void WM_main_add_notifier(int type, Object reference)
+public static void WM_main_add_notifier(bContext C, int type, Object reference)
 {
-	Main bmain= G.main;
-	wmWindowManager wm= bmain.wm.first;
+	//wmWindowManager wm= G.main.wm.first;
+	wmWindowManager wm= bContext.CTX_data_main_wm_list(C).first;
 
 	if(wm!=null && !wm_test_duplicate_notifier(wm, type, reference)) {
 //		wmNotifier *note= MEM_callocN(sizeof(wmNotifier), "notifier");
@@ -421,7 +421,7 @@ static wmOperator wm_operator_create(wmWindowManager wm, wmOperatorType ot, Poin
 	/* initialize properties, either copy or create */
 	op.ptr= new PointerRNA();
 //        op.ptr= properties;
-	if(properties!=null && properties.data!=null) {
+	if(properties!=null && properties.getData()!=null) {
 //                System.out.println("wm_operator_create properties.data!=null");
 //		op.properties= IDP_CopyProperty(properties.data);
 	}
@@ -471,8 +471,8 @@ static int wm_operator_invoke(bContext C, wmOperatorType ot, wmEvent event, Poin
 //                System.out.printf("wm_operator_invoke name:%s event:%d\n", ot.name, event.type);
 		wmOperator op= wm_operator_create(wm, ot, properties, null);
 
-		if((G.f & Global.G_DEBUG)!=0 && event!=null && event.type!=WmEventTypes.MOUSEMOVE)
-			System.out.printf("handle evt %d win %d op %s\n", event!=null?event.type:0, bContext.CTX_wm_screen(C).subwinactive, ot.idname);
+//		if((G.f & Global.G_DEBUG)!=0 && event!=null && event.type!=WmEventTypes.MOUSEMOVE)
+//			System.out.printf("handle evt %d win %d op %s\n", event!=null?event.type:0, bContext.CTX_wm_screen(C).subwinactive, ot.idname);
 
 		if(((wmOperatorType)op.type).invoke!=null && event!=null) {
 			wm_region_mouse_co(C, event);
@@ -496,7 +496,8 @@ static int wm_operator_invoke(bContext C, wmOperatorType ot, wmEvent event, Poin
 //			if((ot.flag & WmTypes.OPTYPE_UNDO)!=0)
 //				ED_undo_push_op(C, op);
 
-			if((ot.flag & WmTypes.OPTYPE_REGISTER)!=0 || (G.f & Global.G_DEBUG)!=0)
+			//if((ot.flag & WmTypes.OPTYPE_REGISTER)!=0 || (G.f & Global.G_DEBUG)!=0)
+			if((ot.flag & WmTypes.OPTYPE_REGISTER)!=0)
 				Wm.wm_operator_register(C, op);
 			else
 				Wm.WM_operator_free(op);
@@ -847,7 +848,8 @@ static int wm_handler_operator_call(bContext C, ListBase handlers, wmEventHandle
 //				if(ot.flag & OPTYPE_UNDO)
 //					ED_undo_push_op(C, op);
 
-				if((ot.flag & WmTypes.OPTYPE_REGISTER)!=0 || (G.f & Global.G_DEBUG)!=0)
+				//if((ot.flag & WmTypes.OPTYPE_REGISTER)!=0 || (G.f & Global.G_DEBUG)!=0)
+				if((ot.flag & WmTypes.OPTYPE_REGISTER)!=0)
 					Wm.wm_operator_register(C, op);
 				else
 					Wm.WM_operator_free(op);
@@ -1821,9 +1823,9 @@ public static void wm_event_add_ghostevent(wmWindow win, GHOST_TEventType type, 
 				   event.oskey= evt.oskey = 3;		// define?
 			}
 
-			/* if test_break set, it catches this. XXX Keep global for now? */
-			if(event.type==WmEventTypes.ESCKEY)
-				G.afbreek= 1;
+//			/* if test_break set, it catches this. XXX Keep global for now? */
+//			if(event.type==WmEventTypes.ESCKEY)
+//				G.afbreek= 1;
 
 			wm_event_add(win, event);
 
