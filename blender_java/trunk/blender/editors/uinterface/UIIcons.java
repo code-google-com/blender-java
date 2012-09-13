@@ -27,19 +27,16 @@
 package blender.editors.uinterface;
 
 import blender.blenkernel.Icons;
+import blender.blenkernel.bContext;
 import blender.blenkernel.Icons.Icon;
 import blender.imbuf.ImBuf;
 import blender.imbuf.ReadImage;
 import blender.makesdna.DNA_ID;
-import blender.makesdna.sdna.ID;
-import blender.makesdna.sdna.PreviewImage;
 import blender.makesdna.sdna.bTheme;
 import java.net.URL;
-import static blender.blenkernel.Blender.U;
 import java.nio.ByteBuffer;
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
-//import resources.ResourceAnchor;
 
 public class UIIcons {
 
@@ -420,9 +417,9 @@ public static void def_internal_vicon( int icon_id, VectorDrawFunc drawFunc)
 //	glDisable(GL_LINE_SMOOTH);
 //}
 
-static void init_internal_icons(URL iconfilestr)
+static void init_internal_icons(bContext C, URL iconfilestr)
 {
-	bTheme btheme= (bTheme)U.themes.first;
+	bTheme btheme= (bTheme)bContext.getUserDef(C).themes.first;
 	ImBuf bbuf= null;
 	int x, y;
 //	char iconfilestr[FILE_MAXDIR+FILE_MAXFILE];
@@ -684,11 +681,11 @@ public static int UI_icon_get_width(int icon_id)
 //	return 0;
 //}
 
-public static void UI_icons_init(int first_dyn_id, URL iconfilestr)
+public static void UI_icons_init(bContext C, int first_dyn_id, URL iconfilestr)
 {
 //	init_iconfile_list(&iconfilelist);
 	Icons.BKE_icons_init(first_dyn_id);
-	init_internal_icons(iconfilestr);
+	init_internal_icons(C, iconfilestr);
 }
 
 //static void icon_copy_rect(ImBuf *ibuf, unsigned int w, unsigned int h, unsigned int *rect)

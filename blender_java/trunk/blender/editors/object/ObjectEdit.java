@@ -59,9 +59,9 @@ import blender.makesrna.RnaAccess;
 import blender.makesrna.RnaDefine;
 import blender.makesrna.RNATypes.EnumPropertyItem;
 import blender.windowmanager.WmEventSystem;
-import blender.windowmanager.WmOperators;
+import blender.windowmanager.WmOperatorsUtil;
 import blender.windowmanager.WmTypes;
-import blender.windowmanager.WmOperators.OpFunc;
+import blender.windowmanager.WmOperatorsUtil.OpFunc;
 import blender.windowmanager.WmTypes.wmEvent;
 
 //#include <string.h>
@@ -448,7 +448,7 @@ public void run(wmOperatorType ot)
 	ot.idname= "OBJECT_OT_mesh_add";
 
 	/* api callbacks */
-	ot.invoke= WmOperators.WM_menu_invoke;
+	ot.invoke= WmOperatorsUtil.WM_menu_invoke;
 	ot.exec= object_add_mesh_exec;
 
 	ot.poll= ScreenOps.ED_operator_scene_editable;
@@ -590,7 +590,7 @@ public void run(wmOperatorType ot)
 	ot.idname= "OBJECT_OT_surface_add";
 
 	/* api callbacks */
-	ot.invoke= WmOperators.WM_menu_invoke;
+	ot.invoke= WmOperatorsUtil.WM_menu_invoke;
 	ot.exec= object_add_surface_exec;
 
 	ot.poll= ScreenOps.ED_operator_scene_editable;

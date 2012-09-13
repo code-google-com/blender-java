@@ -889,7 +889,7 @@ public static void buttons_context_draw(bContext C, uiLayout layout)
 
 		if(a != 0)
 //			UI.uiDefIconBut(block, UI.LABEL, 0, BIFIconID.VICON_SMALL_TRI_RIGHT, 0, 0, 10, UI.UI_UNIT_Y, null, 0, 0, 0, 0, "");
-			UILayout.uiItemL(row, "", BIFIconID.VICON_SMALL_TRI_RIGHT.ordinal());
+			UILayout.uiItemL(row, C, "", BIFIconID.VICON_SMALL_TRI_RIGHT.ordinal());
 
 		if(ptr.data!=null) {
 			icon= RnaAccess.RNA_struct_ui_icon(ptr.type);
@@ -905,7 +905,7 @@ public static void buttons_context_draw(bContext C, uiLayout layout)
 //					MEM_freeN(name);
 //			}
 //			else
-				UILayout.uiItemL(row, "", icon);
+				UILayout.uiItemL(row, C, "", icon);
 		}
 	}
 }

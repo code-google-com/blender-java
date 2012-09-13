@@ -51,7 +51,7 @@ import blender.makesrna.RNATypes.PointerRNA;
 import blender.makesrna.rna_internal_types.PropertyRNA;
 import blender.makesrna.rna_internal_types.StructRNA;
 import blender.windowmanager.Wm;
-import blender.windowmanager.WmOperators;
+import blender.windowmanager.WmOperatorsUtil;
 import blender.windowmanager.WmTypes;
 
 //#include <math.h>
@@ -259,16 +259,16 @@ static int ui_layout_vary_direction(uiLayout layout)
 }
 
 /* estimated size of text + icon */
-static int ui_text_icon_width(uiLayout layout, byte[] name, int icon, int compact)
+static int ui_text_icon_width(uiLayout layout, bContext C, byte[] name, int icon, int compact)
 {
 	boolean variable = ui_layout_vary_direction(layout) == UI_ITEM_VARY_X;
 
 	if(icon!=0 && name[0]==0)
 		return UI.UI_UNIT_X; /* icon only */
 	else if(icon!=0)
-		return (variable)? UIStyle.UI_GetStringWidth(name,0) + (compact!=0? 5: 10) + UI.UI_UNIT_X: 10*UI.UI_UNIT_X; /* icon + text */
+		return (variable)? UIStyle.UI_GetStringWidth(C, name,0) + (compact!=0? 5: 10) + UI.UI_UNIT_X: 10*UI.UI_UNIT_X; /* icon + text */
 	else
-		return (variable)? UIStyle.UI_GetStringWidth(name,0) + (compact!=0? 5: 10) + UI.UI_UNIT_X: 10*UI.UI_UNIT_X; /* text only */
+		return (variable)? UIStyle.UI_GetStringWidth(C, name,0) + (compact!=0? 5: 10) + UI.UI_UNIT_X: 10*UI.UI_UNIT_X; /* text only */
 }
 
 static void ui_item_size(uiItem item, int[] r_w, int[] r_h)
@@ -506,7 +506,7 @@ public static void ui_item_array(uiLayout layout, uiBlock block, String name, in
 	uiBlockSetCurLayout(block, layout);
 }
 
-public static void ui_item_enum_expand(uiLayout layout, uiBlock block, PointerRNA ptr, PropertyRNA prop, String uiname, int h, int icon_only)
+public static void ui_item_enum_expand(uiLayout layout, bContext C, uiBlock block, PointerRNA ptr, PropertyRNA prop, String uiname, int h, int icon_only)
 {
 	uiBut but;
 	EnumPropertyItem[][] item = new EnumPropertyItem[1][];
@@ -530,7 +530,7 @@ public static void ui_item_enum_expand(uiLayout layout, uiBlock block, PointerRN
 		name= (uiname==null || StringUtil.toCString(uiname)[0]!=0)? (String)item[0][a].getName(): "";
 		icon= item[0][a].getIcon();
 		value= item[0][a].getValue();
-		itemw= ui_text_icon_width(block.curlayout, StringUtil.toCString(name), icon, 0);
+		itemw= ui_text_icon_width(block.curlayout, C, StringUtil.toCString(name), icon, 0);
 
 //		if(icon && strcmp(name, "") != 0 && !icon_only)
 //		if(icon!=0 && !name.equals("") && icon_only==0)
@@ -679,7 +679,7 @@ public static uiBut ui_item_with_label(uiLayout layout, uiBlock block, String na
 /********************* Button Items *************************/
 
 /* disabled item */
-static void ui_item_disabled(uiLayout layout, String name)
+static void ui_item_disabled(uiLayout layout, bContext C, String name)
 {
 	uiBlock block= layout.root.block;
 	uiBut but;
@@ -690,7 +690,7 @@ static void ui_item_disabled(uiLayout layout, String name)
 	if(name==null)
 		name= "";
 
-	w= ui_text_icon_width(layout, StringUtil.toCString(name), 0, 0);
+	w= ui_text_icon_width(layout, C, StringUtil.toCString(name), 0, 0);
 
 	but= UI.uiDefBut(block, UI.LABEL, 0, name, 0, 0, w, UI.UI_UNIT_Y, null, 0.0f, 0.0f, 0, 0, "");
 	but.flag |= UI.UI_BUT_DISABLED;
@@ -699,15 +699,15 @@ static void ui_item_disabled(uiLayout layout, String name)
 }
 
 /* operator items */
-public static PointerRNA uiItemFullO(uiLayout layout, String idname, String name, int icon, IDProperty properties, int context, int flag)
+public static PointerRNA uiItemFullO(uiLayout layout, bContext C, String idname, String name, int icon, IDProperty properties, int context, int flag)
 {
 	uiBlock block= layout.root.block;
-	wmOperatorType ot= WmOperators.WM_operatortype_find(idname, false);
+	wmOperatorType ot= WmOperatorsUtil.WM_operatortype_find(idname, false);
 	uiBut but;
 	int w;
 
 	if(ot==null) {
-		ui_item_disabled(layout, idname);
+		ui_item_disabled(layout, C, idname);
 		return RnaAccess.PointerRNA_NULL();
 	}
 
@@ -719,7 +719,7 @@ public static PointerRNA uiItemFullO(uiLayout layout, String idname, String name
 	/* create button */
 	uiBlockSetCurLayout(block, layout);
 
-	w= ui_text_icon_width(layout, StringUtil.toCString(name), icon, 0);
+	w= ui_text_icon_width(layout, C, StringUtil.toCString(name), icon, 0);
 
 	if ((flag & UI.UI_ITEM_R_NO_BG)!=0)
 		UI.uiBlockSetEmboss(block, UI.UI_EMBOSSN);
@@ -760,7 +760,7 @@ public static PointerRNA uiItemFullO(uiLayout layout, String idname, String name
 
 public static String ui_menu_enumpropname(uiLayout layout, String opname, String propname, int retval)
 {
-	wmOperatorType ot= WmOperators.WM_operatortype_find(opname, false);
+	wmOperatorType ot= WmOperatorsUtil.WM_operatortype_find(opname, false);
 	PointerRNA ptr = new PointerRNA();
 	PropertyRNA prop;
 
@@ -788,29 +788,29 @@ public static String ui_menu_enumpropname(uiLayout layout, String opname, String
 	return "";
 }
 
-public static void uiItemEnumO(uiLayout layout, String opname, String name, int icon, String propname, int value)
+public static void uiItemEnumO(uiLayout layout, bContext C, String opname, String name, int icon, String propname, int value)
 {
 	PointerRNA ptr = new PointerRNA();
 
-	WmOperators.WM_operator_properties_create(ptr, opname);
+	WmOperatorsUtil.WM_operator_properties_create(ptr, opname);
 	RnaAccess.RNA_enum_set(ptr, propname, value);
 
 	if(name==null)
 		name= ui_menu_enumpropname(layout, opname, propname, value);
 
-	uiItemFullO(layout, opname, name, icon, (IDProperty)ptr.getData(), layout.root.opcontext, 0);
+	uiItemFullO(layout, C, opname, name, icon, (IDProperty)ptr.getData(), layout.root.opcontext, 0);
 }
 
-public static void uiItemsFullEnumO(uiLayout layout, String opname, String propname, IDProperty properties, int context, int flag)
+public static void uiItemsFullEnumO(uiLayout layout, bContext C, String opname, String propname, IDProperty properties, int context, int flag)
 {
-	wmOperatorType ot= WmOperators.WM_operatortype_find(opname, false);
+	wmOperatorType ot= WmOperatorsUtil.WM_operatortype_find(opname, false);
 	PointerRNA ptr = new PointerRNA();
 	PropertyRNA prop;
 	uiBut bt;
 	uiBlock block= layout.root.block;
 
 	if(ot==null || ot.srna==null) {
-		ui_item_disabled(layout, opname);
+		ui_item_disabled(layout, C, opname);
 		return;
 	}
 
@@ -843,7 +843,7 @@ public static void uiItemsFullEnumO(uiLayout layout, String opname, String propn
 //					uiItemFullO(column, opname, (char*)item[i].name, item[i].icon, tptr.data, context, flag);
 				}
 				else
-					uiItemEnumO(column, opname, (String)item[0][i].getName(), item[0][i].getIcon(), propname, item[0][i].getValue());
+					uiItemEnumO(column, C, opname, (String)item[0][i].getName(), item[0][i].getIcon(), propname, item[0][i].getValue());
 			}
 			else {
 				if(item[0][i].getName()!=null) {
@@ -853,7 +853,7 @@ public static void uiItemsFullEnumO(uiLayout layout, String opname, String propn
 						block.flag |= UI.UI_BLOCK_NO_FLIP;
 					}
 
-					uiItemL(column, (String)item[0][i].getName(), UI.ICON_NULL);
+					uiItemL(column, C, (String)item[0][i].getName(), UI.ICON_NULL);
 					bt= block.buttons.last;
 					bt.flag= UI.UI_TEXT_LEFT;
 				}
@@ -867,9 +867,9 @@ public static void uiItemsFullEnumO(uiLayout layout, String opname, String propn
 	}
 }
 
-public static void uiItemsEnumO(uiLayout layout, String opname, String propname)
+public static void uiItemsEnumO(uiLayout layout, bContext C, String opname, String propname)
 {
-	uiItemsFullEnumO(layout, opname, propname, null, layout.root.opcontext, 0);
+	uiItemsFullEnumO(layout, C, opname, propname, null, layout.root.opcontext, 0);
 	
 //	wmOperatorType ot= WmOperators.WM_operatortype_find(opname, false);
 //	PointerRNA ptr = new PointerRNA();
@@ -901,7 +901,7 @@ public static void uiItemsEnumO(uiLayout layout, String opname, String propname)
 }
 
 /* for use in cases where we have */
-public static void uiItemEnumO_string(uiLayout layout, String name, int icon, String opname, String propname, String value_str)
+public static void uiItemEnumO_string(uiLayout layout, bContext C, String name, int icon, String opname, String propname, String value_str)
 {
 	PointerRNA ptr = new PointerRNA();
 
@@ -910,7 +910,7 @@ public static void uiItemEnumO_string(uiLayout layout, String name, int icon, St
 	EnumPropertyItem[][] item = new EnumPropertyItem[1][];
 	int[] value={0}, free={0};
 
-	WmOperators.WM_operator_properties_create(ptr, opname);
+	WmOperatorsUtil.WM_operator_properties_create(ptr, opname);
 
 	/* enum lookup */
 	if((prop= RnaAccess.RNA_struct_find_property(ptr, StringUtil.toCString(propname),0))!=null) {
@@ -935,17 +935,17 @@ public static void uiItemEnumO_string(uiLayout layout, String name, int icon, St
 	if(name==null)
 		name= ui_menu_enumpropname(layout, opname, propname, value[0]);
 
-	uiItemFullO(layout, opname, name, icon, (IDProperty)ptr.getData(), layout.root.opcontext, 0);
+	uiItemFullO(layout, C, opname, name, icon, (IDProperty)ptr.getData(), layout.root.opcontext, 0);
 }
 
-public static void uiItemBooleanO(uiLayout layout, String name, int icon, String opname, String propname, boolean value)
+public static void uiItemBooleanO(uiLayout layout, bContext C, String name, int icon, String opname, String propname, boolean value)
 {
 	PointerRNA ptr = new PointerRNA();
 
-	WmOperators.WM_operator_properties_create(ptr, opname);
+	WmOperatorsUtil.WM_operator_properties_create(ptr, opname);
 	RnaAccess.RNA_boolean_set(ptr, propname, value);
 
-	uiItemFullO(layout, opname, name, icon, (IDProperty)ptr.getData(), layout.root.opcontext, 0);
+	uiItemFullO(layout, C, opname, name, icon, (IDProperty)ptr.getData(), layout.root.opcontext, 0);
 }
 
 //void uiItemIntO(uiLayout *layout, char *name, int icon, char *opname, char *propname, int value)
@@ -978,14 +978,14 @@ public static void uiItemBooleanO(uiLayout layout, String name, int icon, String
 //	uiItemFullO(layout, name, icon, opname, ptr.data, layout.root.opcontext);
 //}
 
-public static void uiItemO(uiLayout layout, String name, int icon, String opname)
+public static void uiItemO(uiLayout layout, bContext C, String name, int icon, String opname)
 {
-	uiItemFullO(layout, opname, name, icon, null, layout.root.opcontext, 0);
+	uiItemFullO(layout, C, opname, name, icon, null, layout.root.opcontext, 0);
 }
 
 /* RNA property items */
 
-public static void ui_item_rna_size(uiLayout layout, String name, int icon, PointerRNA ptr, PropertyRNA prop, int index, int icon_only, int[] r_w, int[] r_h)
+public static void ui_item_rna_size(uiLayout layout, bContext C, String name, int icon, PointerRNA ptr, PropertyRNA prop, int index, int icon_only, int[] r_w, int[] r_h)
 {
 	int type;
 	int subtype;
@@ -1001,7 +1001,7 @@ public static void ui_item_rna_size(uiLayout layout, String name, int icon, Poin
 	else if(type == RNATypes.PROP_BOOLEAN && name.isEmpty() && icon_only==0)
 		icon= BIFIconID.ICON_DOT.ordinal();
 
-	w= ui_text_icon_width(layout, StringUtil.toCString(name), icon, 0);
+	w= ui_text_icon_width(layout, C, StringUtil.toCString(name), icon, 0);
 	h= UI.UI_UNIT_Y;
 
 	/* increase height for arrays */
@@ -1029,7 +1029,7 @@ public static void ui_item_rna_size(uiLayout layout, String name, int icon, Poin
 	r_h[0]= h;
 }
 
-public static void uiItemFullR(uiLayout layout, PointerRNA ptr, PropertyRNA prop, int index, int value, int flag, String name, int icon)
+public static void uiItemFullR(uiLayout layout, bContext C, PointerRNA ptr, PropertyRNA prop, int index, int value, int flag, String name, int icon)
 {
 	uiBlock block= layout.root.block;
 	uiBut but;
@@ -1078,7 +1078,7 @@ public static void uiItemFullR(uiLayout layout, PointerRNA ptr, PropertyRNA prop
 	no_bg= (flag & UI.UI_ITEM_R_NO_BG);
 
 	/* get size */
-	ui_item_rna_size(layout, name, icon, ptr, prop, index, icon_only, w, h);
+	ui_item_rna_size(layout, C, name, icon, ptr, prop, index, icon_only, w, h);
 
 	if (no_bg!=0)
 		UI.uiBlockSetEmboss(block, UI.UI_EMBOSSN);
@@ -1103,7 +1103,7 @@ public static void uiItemFullR(uiLayout layout, PointerRNA ptr, PropertyRNA prop
 	/* expanded enum */
 	else if(type == RNATypes.PROP_ENUM && (expand!=0 || (RnaAccess.RNA_property_flag(prop) & RNATypes.PROP_ENUM_FLAG)!=0)) {
 //		System.out.println("uiItemFullR 3: "+name);
-		UILayout.ui_item_enum_expand(layout, block, ptr, prop, name, h[0], icon_only);
+		UILayout.ui_item_enum_expand(layout, C, block, ptr, prop, name, h[0], icon_only);
 	}
 	/* property with separate label */
 	else if(type == RNATypes.PROP_ENUM || type == RNATypes.PROP_STRING || type == RNATypes.PROP_POINTER) {
@@ -1133,17 +1133,17 @@ public static void uiItemFullR(uiLayout layout, PointerRNA ptr, PropertyRNA prop
 		UI.uiBlockSetEmboss(block, UI.UI_EMBOSS);
 }
 
-public static void uiItemR(uiLayout layout, PointerRNA ptr, String propname, int flag, String name, int icon)
+public static void uiItemR(uiLayout layout, bContext C, PointerRNA ptr, String propname, int flag, String name, int icon)
 {
 	PropertyRNA prop= RnaAccess.RNA_struct_find_property(ptr, StringUtil.toCString(propname),0);
 
 	if(prop==null) {
-		ui_item_disabled(layout, propname);
+		ui_item_disabled(layout, C, propname);
 		System.out.printf("uiItemR: property not found: %s.%s\n", RnaAccess.RNA_struct_identifier(ptr.getTypeStruct()), propname);
 		return;
 	}
 
-	uiItemFullR(layout, ptr, prop, RNA_NO_INDEX, 0, flag, name, icon);
+	uiItemFullR(layout, C, ptr, prop, RNA_NO_INDEX, 0, flag, name, icon);
 }
 
 //	uiItemFullR(layout, name, icon, ptr, prop, RNA_NO_INDEX, 0, expand, slider, toggle);
@@ -1325,7 +1325,7 @@ public static void ui_but_add_search(uiBut but, PointerRNA ptr, PropertyRNA prop
 	}
 }
 
-public static void uiItemPointerR(uiLayout layout, PointerRNA ptr, String propname, PointerRNA searchptr, String searchpropname, String name, int icon)
+public static void uiItemPointerR(uiLayout layout, bContext C, PointerRNA ptr, String propname, PointerRNA searchptr, String searchpropname, String name, int icon)
 {
 	PropertyRNA prop, searchprop;
 	int type;
@@ -1375,7 +1375,7 @@ public static void uiItemPointerR(uiLayout layout, PointerRNA ptr, String propna
 	/* create button */
 	block= uiLayoutGetBlock(layout);
 
-	ui_item_rna_size(layout, name, icon, ptr, prop, 0, 0, w, h);
+	ui_item_rna_size(layout, C, name, icon, ptr, prop, 0, 0, w, h);
 	but= ui_item_with_label(layout, block, name, icon, ptr, prop, 0, 0, 0, w[0], h[0], 0);
 
 	ui_but_add_search(but, ptr, prop, searchptr, searchprop);
@@ -1395,7 +1395,7 @@ public void run(bContext C, uiLayout layout, Object arg_mt)
 }
 };
 
-public static void ui_item_menu(uiLayout layout, String name, int icon, UI.uiMenuCreateFunc func, Pointer arg, Object argN)
+public static void ui_item_menu(uiLayout layout, bContext C, String name, int icon, UI.uiMenuCreateFunc func, Pointer arg, Object argN)
 {
 	uiBlock block= layout.root.block;
 	final uiBut but;
@@ -1411,7 +1411,7 @@ public static void ui_item_menu(uiLayout layout, String name, int icon, UI.uiMen
 	if(layout.root.type == UI.UI_LAYOUT_MENU && icon==0)
 		icon= BIFIconID.ICON_BLANK1.ordinal();
 
-	w= ui_text_icon_width(layout, StringUtil.toCString(name), icon, 1);
+	w= ui_text_icon_width(layout, C, StringUtil.toCString(name), icon, 1);
 	h= UI.UI_UNIT_Y;
 
 	if(layout.root.type == UI.UI_LAYOUT_HEADER) /* ugly .. */
@@ -1466,11 +1466,11 @@ public static void uiItemM(uiLayout layout, bContext C, String menuname, String 
 			throw new UnsupportedOperationException("Not supported yet.");
 		}
 	};
-	ui_item_menu(layout, name, icon, ui_item_menutype_func, mt_p, null);
+	ui_item_menu(layout, C, name, icon, ui_item_menutype_func, mt_p, null);
 }
 
 /* label item */
-public static uiBut uiItemL_(uiLayout layout, String name, int icon)
+public static uiBut uiItemL_(uiLayout layout, bContext C, String name, int icon)
 {
 	uiBlock block= layout.root.block;
 	uiBut but;
@@ -1483,7 +1483,7 @@ public static uiBut uiItemL_(uiLayout layout, String name, int icon)
 	if(layout.root.type == UI.UI_LAYOUT_MENU && icon==0)
 		icon= BIFIconID.ICON_BLANK1.ordinal();
 
-	w= ui_text_icon_width(layout, StringUtil.toCString(name), icon, 0);
+	w= ui_text_icon_width(layout, C, StringUtil.toCString(name), icon, 0);
 
 //	if(icon!=0 && StringUtil.strcmp(name, "") != 0)
     if(icon!=0 && !name.isEmpty())
@@ -1496,9 +1496,9 @@ public static uiBut uiItemL_(uiLayout layout, String name, int icon)
     return but;
 }
 
-public static void uiItemL(uiLayout layout, String name, int icon)
+public static void uiItemL(uiLayout layout, bContext C, String name, int icon)
 {
-	uiItemL_(layout, name, icon);
+	uiItemL_(layout, C, name, icon);
 }
 
 ///* value item */
@@ -1536,12 +1536,12 @@ public static void uiItemS(uiLayout layout)
 }
 
 /* level items */
-public static void uiItemMenuF(uiLayout layout, String name, int icon, uiMenuCreateFunc func, Pointer arg)
+public static void uiItemMenuF(uiLayout layout, bContext C, String name, int icon, uiMenuCreateFunc func, Pointer arg)
 {
 	if(func==null)
 		return;
 
-	ui_item_menu(layout, name, icon, func, arg, null);
+	ui_item_menu(layout, C, name, icon, func, arg, null);
 }
 
 public static class MenuItemLevel {
@@ -1557,16 +1557,16 @@ public void run(bContext C, uiLayout layout, Object arg)
 	MenuItemLevel lvl= (MenuItemLevel)(((uiBut)arg).func_argN);
 
 	uiLayoutSetOperatorContext(layout, WmTypes.WM_OP_EXEC_REGION_WIN);
-	uiItemsEnumO(layout, lvl.opname, lvl.propname);
+	uiItemsEnumO(layout, C, lvl.opname, lvl.propname);
 }};
 
-public static void uiItemMenuEnumO(uiLayout layout, String opname, String propname, String name, int icon)
+public static void uiItemMenuEnumO(uiLayout layout, bContext C, String opname, String propname, String name, int icon)
 {
-	wmOperatorType ot= WmOperators.WM_operatortype_find(opname, false);
+	wmOperatorType ot= WmOperatorsUtil.WM_operatortype_find(opname, false);
 	MenuItemLevel lvl;
 
 	if(ot==null || ot.srna==null) {
-		ui_item_disabled(layout, opname);
+		ui_item_disabled(layout, C, opname);
 		return;
 	}
 
@@ -1580,7 +1580,7 @@ public static void uiItemMenuEnumO(uiLayout layout, String opname, String propna
 	lvl.propname= propname;
 	lvl.opcontext= layout.root.opcontext;
 
-	ui_item_menu(layout, name, icon, menu_item_enum_opname_menu, null, lvl);
+	ui_item_menu(layout, C, name, icon, menu_item_enum_opname_menu, null, lvl);
 }
 
 //static void menu_item_enum_rna_menu(bContext *C, uiLayout *layout, void *arg)

@@ -1314,7 +1314,7 @@ public static void main(String[] argv) {
 //#endif
 	
 //	CTX_py_init_set(C, 1);
-	Wm.WM_keymap_init(C);
+	WmInitExit.WM_keymap_init(C);
 
 	/* OK we are ready for it */
 //	Args.BLI_argsParse(ba, 4, load_file, C);

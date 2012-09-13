@@ -147,11 +147,11 @@ public SpaceLink run(SpaceLink sl)
 
 /* add handlers, stuff you only do once or on area/region changes */
 public static ARegionType.Init buttons_main_area_init = new ARegionType.Init() {
-public void run(wmWindowManager wm, ARegion ar)
+public void run(bContext C, wmWindowManager wm, ARegion ar)
 {
 	wmKeyMap keymap;
 
-	Area.ED_region_panels_init(wm, ar);
+	Area.ED_region_panels_init(C, wm, ar);
 
 	keymap= WmKeymap.WM_keymap_find(wm.defaultconf, "Buttons Generic", SpaceTypes.SPACE_BUTS, 0);
 	WmEventSystem.WM_event_add_keymap_handler(ar.handlers, keymap);
@@ -214,9 +214,9 @@ public void run(wmKeyConfig keyconf)
 
 /* add handlers, stuff you only do once or on area/region changes */
 public static ARegionType.Init buttons_header_area_init = new ARegionType.Init() {
-public void run(wmWindowManager wm, ARegion ar)
+public void run(bContext C, wmWindowManager wm, ARegion ar)
 {
-	View2dUtil.UI_view2d_region_reinit(ar.v2d, View2dUtil.V2D_COMMONVIEW_HEADER, ar.winx, ar.winy);
+	View2dUtil.UI_view2d_region_reinit(C, ar.v2d, View2dUtil.V2D_COMMONVIEW_HEADER, ar.winx, ar.winy);
 }};
 
 public static ARegionType.Draw buttons_header_area_draw = new ARegionType.Draw() {

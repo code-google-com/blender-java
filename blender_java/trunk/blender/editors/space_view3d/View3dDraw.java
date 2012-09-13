@@ -36,7 +36,7 @@ import blender.blenkernel.bContext;
 import blender.blenlib.Arithb;
 import blender.editors.screen.Area;
 import blender.editors.screen.GlUtil;
-import blender.editors.space_api.SpaceTypeUtil;
+import blender.editors.space_api.SpaceTypeDraw;
 import blender.editors.transform.TransformManipulator;
 import blender.editors.uinterface.Resources;
 import blender.editors.uinterface.UIDraw;
@@ -1989,7 +1989,7 @@ public void run(GL2 gl, bContext C, ARegion ar)
 //		view3d_update_depths(ar, v3d);
 //	}
 
-	SpaceTypeUtil.ED_region_draw_cb_draw(gl, C, ar, SpaceTypeUtil.REGION_DRAW_POST);
+	SpaceTypeDraw.ED_region_draw_cb_draw(gl, C, ar, SpaceTypeDraw.REGION_DRAW_POST);
 
 ////	REEB_draw();
 //

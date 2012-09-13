@@ -65,6 +65,7 @@ import blender.makesrna.rna_internal_types.StringPropertyRNA;
 import blender.makesrna.rna_internal_types.StructRNA;
 import blender.makesrna.srna.RnaBlendData;
 import blender.makesrna.srna.RnaIDProperty;
+import blender.makesrna.srna.RnaOperatorProperties;
 
 public class RnaAccess {
 	
@@ -637,6 +638,10 @@ public static final PointerRNA PointerRNA_NULL= new PointerRNA();
 
 public static PointerRNA PointerRNA_NULL() {
 	return PointerRNA_NULL;
+}
+
+public static StructRNA getRnaOperatorProperties() {
+	return RnaOperatorProperties.RNA_OperatorProperties;
 }
 
 //public static void RNA_main_pointer_create(Main main, PointerRNA r_ptr)

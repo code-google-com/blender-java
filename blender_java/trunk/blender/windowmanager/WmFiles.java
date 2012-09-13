@@ -151,7 +151,7 @@ public static void wm_window_match_do(bContext C, ListBase<wmWindowManager> oldw
 						if(screen.winid==0)
 							win.screen= screen;
 						else
-							win.screen= ScreenEdit.ED_screen_duplicate(win, screen);
+							win.screen= ScreenEdit.ED_screen_duplicate(C, win, screen);
 	
 						StringUtil.BLI_strncpy(win.screenname,0, win.screen.id.name,2, 21);
 						win.screen.winid= (short)win.winid;
@@ -214,7 +214,7 @@ public static void wm_window_match_do(bContext C, ListBase<wmWindowManager> oldw
 /* in case UserDef was read, we re-initialize all, and do versioning */
 public static void wm_init_userdef(bContext C)
 {
-	UI.UI_init_userdef();
+	UI.UI_init_userdef(C);
 //	MEM_CacheLimiter_set_maximum(U.memcachelimit * 1024 * 1024);
 //	sound_init(CTX_data_main(C));
 //

@@ -28,10 +28,9 @@ package blender.blenkernel;
 
 import static blender.blenkernel.Blender.G;
 
-//import javax.media.opengl.GL2;
-
 import blender.blenlib.ListBaseUtil;
 import blender.blenlib.StringUtil;
+import blender.makesdna.DNA_ID;
 import blender.makesdna.ObjectTypes;
 import blender.makesdna.SpaceTypes;
 import blender.makesdna.sdna.ARegion;
@@ -48,6 +47,7 @@ import blender.makesdna.sdna.SpaceNode;
 import blender.makesdna.sdna.SpaceOops;
 import blender.makesdna.sdna.SpaceTime;
 import blender.makesdna.sdna.ToolSettings;
+import blender.makesdna.sdna.UserDef;
 import blender.makesdna.sdna.View3D;
 import blender.makesdna.sdna.bObject;
 import blender.makesdna.sdna.bScreen;
@@ -57,6 +57,7 @@ import blender.makesrna.RnaAccess;
 import blender.makesrna.RNATypes.CollectionPointerLink;
 import blender.makesrna.RNATypes.PointerRNA;
 import blender.makesrna.rna_internal_types.StructRNA;
+import blender.windowmanager.WmInitExit;
 
 public class bContext {
 	
@@ -88,13 +89,13 @@ public class bContext {
     }
 
     public static class bContextStoreEntry extends Link<bContextStoreEntry> {
-	public byte[] name = new byte[128];
-	public PointerRNA ptr = new PointerRNA();
+		public byte[] name = new byte[128];
+		public PointerRNA ptr = new PointerRNA();
     };
 
     public static class bContextStore extends Link<bContextStore> {
-	public ListBase entries = new ListBase();
-	public int used;
+		public ListBase entries = new ListBase();
+		public int used;
     };
 
     public static class bContextWM {
@@ -154,6 +155,22 @@ public class bContext {
 //	} eval;
         public bContextEval eval = new bContextEval();
 //};
+        
+public static UserDef getUserDef(bContext C) {
+	return Blender.U;
+}
+
+public static short getRT(bContext C) {
+	return Blender.G.rt;
+}
+
+public static int getXIC(bContext C) {
+	return Blender.XIC;
+}
+
+public static int getYIC(bContext C) {
+	return Blender.YIC;
+}
 
     /* context */
 
@@ -423,6 +440,12 @@ public static void CTX_wm_manager_close(bContext C)
 	}
 }
 
+public static void CTX_wm_manager_init(bContext C)
+{
+	WmInitExit.WM_keymap_init(C);
+//	WM_autosave_init(wm);
+}
+
 public static void CTX_wm_manager_close_set(bContext C, bContextWMCloseCallback cb)
 {
 	C.wm.cb = cb;
@@ -488,6 +511,9 @@ public static void CTX_wm_operator_poll_msg_set(bContext C, String msg)
         }
     };
 
+public static bScreen create_screen(bContext C, byte[] name, int offset) {
+	return (bScreen)LibraryUtil.alloc_libblock(CTX_data_main_screen_list(C), DNA_ID.ID_SCR, name, offset);
+}
 
 public static boolean ctx_data_get(bContext C, String member, bContextDataResult result)
 {
@@ -777,6 +803,10 @@ public static Object CTX_data_scene(bContext C)
 
 public static double scene_fps(bContext C) {
 	return (((double) C.data.scene.r.frs_sec) / C.data.scene.r.frs_sec_base);
+}
+
+public static void scene_handle_update(bContext C, Object scene) {
+	SceneUtil.scene_handle_update((Scene)scene);
 }
 
 public static int CTX_data_mode_enum(bContext C)

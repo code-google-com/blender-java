@@ -344,7 +344,7 @@ static void view3d_modal_keymaps(wmWindowManager wm, ARegion ar, int stype)
 
 /* add handlers, stuff you only do once or on area/region changes */
 public static ARegionType.Init view3d_main_area_init = new ARegionType.Init() {
-public void run(wmWindowManager wm, ARegion ar)
+public void run(bContext C, wmWindowManager wm, ARegion ar)
 //static void view3d_main_area_init(wmWindowManager *wm, ARegion *ar)
 {
 //        System.out.println("view3d_main_area_init");
@@ -540,14 +540,14 @@ public void run(ARegion ar, wmNotifier wmn)
 //
 ///* add handlers, stuff you only do once or on area/region changes */
 public static ARegionType.Init view3d_header_area_init = new ARegionType.Init() {
-public void run(wmWindowManager wm, ARegion ar)
+public void run(bContext C, wmWindowManager wm, ARegion ar)
 //static void view3d_header_area_init(wmWindowManager *wm, ARegion *ar)
 {
 	wmKeyMap keymap= WmKeymap.WM_keymap_find(wm.defaultconf, "View3D Generic", SpaceTypes.SPACE_VIEW3D, 0);
 
 	WmEventSystem.WM_event_add_keymap_handler(ar.handlers, keymap);
 
-	Area.ED_region_header_init(ar);
+	Area.ED_region_header_init(C, ar);
 }};
 
 public static ARegionType.Draw view3d_header_area_draw = new ARegionType.Draw() {
@@ -598,12 +598,12 @@ public void run(ARegion ar, wmNotifier wmn)
 
 /* add handlers, stuff you only do once or on area/region changes */
 public static ARegionType.Init view3d_buttons_area_init = new ARegionType.Init() {
-public void run(wmWindowManager wm, ARegion ar)
+public void run(bContext C, wmWindowManager wm, ARegion ar)
 //static void view3d_buttons_area_init(wmWindowManager *wm, ARegion *ar)
 {
 	wmKeyMap keymap;
 
-	Area.ED_region_panels_init(wm, ar);
+	Area.ED_region_panels_init(C, wm, ar);
 
 	keymap= WmKeymap.WM_keymap_find(wm.defaultconf, "View3D Generic", SpaceTypes.SPACE_VIEW3D, 0);
 	WmEventSystem.WM_event_add_keymap_handler(ar.handlers, keymap);
@@ -670,12 +670,12 @@ public void run(ARegion ar, wmNotifier wmn)
 
 /* add handlers, stuff you only do once or on area/region changes */
 public static ARegionType.Init view3d_tools_area_init = new ARegionType.Init() {
-public void run(wmWindowManager wm, ARegion ar)
+public void run(bContext C, wmWindowManager wm, ARegion ar)
 //static void view3d_tools_area_init(wmWindowManager *wm, ARegion *ar)
 {
 	wmKeyMap keymap;
 
-	Area.ED_region_panels_init(wm, ar);
+	Area.ED_region_panels_init(C, wm, ar);
 
 	keymap= WmKeymap.WM_keymap_find(wm.defaultconf, "View3D Generic", SpaceTypes.SPACE_VIEW3D, 0);
 	WmEventSystem.WM_event_add_keymap_handler(ar.handlers, keymap);

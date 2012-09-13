@@ -15,9 +15,9 @@ import blender.makesrna.RnaAccess;
 import blender.windowmanager.WmEventSystem;
 import blender.windowmanager.WmEventTypes;
 import blender.windowmanager.WmKeymap;
-import blender.windowmanager.WmOperators;
+import blender.windowmanager.WmOperatorsUtil;
 import blender.windowmanager.WmTypes;
-import blender.windowmanager.WmOperators.OpFunc;
+import blender.windowmanager.WmOperatorsUtil.OpFunc;
 import blender.windowmanager.WmTypes.wmEvent;
 
 public class View2dOps {
@@ -1669,7 +1669,7 @@ public class View2dOps {
 //		WmOperators.WM_operatortype_append(VIEW2D_OT_zoom);
 //		WmOperators.WM_operatortype_append(VIEW2D_OT_zoom_border);
 		
-		WmOperators.WM_operatortype_append(VIEW2D_OT_scroller_activate);
+		WmOperatorsUtil.WM_operatortype_append(VIEW2D_OT_scroller_activate);
 
 //		WmOperators.WM_operatortype_append(VIEW2D_OT_reset);
 	}

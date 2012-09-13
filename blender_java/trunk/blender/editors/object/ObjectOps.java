@@ -4,7 +4,7 @@ import blender.makesdna.sdna.wmKeyConfig;
 import blender.makesdna.sdna.wmKeyMap;
 import blender.makesdna.sdna.wmWindowManager;
 import blender.windowmanager.WmKeymap;
-import blender.windowmanager.WmOperators;
+import blender.windowmanager.WmOperatorsUtil;
 
 public class ObjectOps {
 //	/**
@@ -106,11 +106,11 @@ public class ObjectOps {
 //		WM_operatortype_append(GROUP_OT_objects_remove_active);
 //
 //		WM_operatortype_append(OBJECT_OT_delete);
-		WmOperators.WM_operatortype_append(ObjectEdit.OBJECT_OT_mesh_add);
-		WmOperators.WM_operatortype_append(ObjectEdit.OBJECT_OT_curve_add);
-		WmOperators.WM_operatortype_append(ObjectEdit.OBJECT_OT_text_add);
-		WmOperators.WM_operatortype_append(ObjectEdit.OBJECT_OT_surface_add);
-		WmOperators.WM_operatortype_append(ObjectEdit.OBJECT_OT_armature_add);
+		WmOperatorsUtil.WM_operatortype_append(ObjectEdit.OBJECT_OT_mesh_add);
+		WmOperatorsUtil.WM_operatortype_append(ObjectEdit.OBJECT_OT_curve_add);
+		WmOperatorsUtil.WM_operatortype_append(ObjectEdit.OBJECT_OT_text_add);
+		WmOperatorsUtil.WM_operatortype_append(ObjectEdit.OBJECT_OT_surface_add);
+		WmOperatorsUtil.WM_operatortype_append(ObjectEdit.OBJECT_OT_armature_add);
 //		WM_operatortype_append(OBJECT_OT_object_add);
 //		WM_operatortype_append(OBJECT_OT_primitive_add);
 //

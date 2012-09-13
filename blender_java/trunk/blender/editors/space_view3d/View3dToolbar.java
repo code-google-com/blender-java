@@ -73,7 +73,7 @@ import blender.makesrna.RNATypes.PointerRNA;
 import blender.windowmanager.WmEventSystem;
 import blender.windowmanager.WmEventTypes;
 import blender.windowmanager.WmTypes;
-import blender.windowmanager.WmOperators.OpFunc;
+import blender.windowmanager.WmOperatorsUtil.OpFunc;
 import blender.windowmanager.WmTypes.wmEvent;
 
 //#include <stdio.h>
@@ -343,7 +343,7 @@ public void run(bContext C, Panel pa)
 		for(ct= (CustomTool)st.toolshelf.first; ct!=null; ct= ct.next) {
 			if(0==StringUtil.strncmp(context,0, ct.context,0, WindowManagerTypes.OP_MAX_TYPENAME)) {
 				col= UILayout.uiLayoutColumn((uiLayout)pa.layout, 1);
-				UILayout.uiItemFullO(col, StringUtil.toJString(ct.opname,0), null, 0, null, WmTypes.WM_OP_INVOKE_REGION_WIN, 0);
+				UILayout.uiItemFullO(col, C, StringUtil.toJString(ct.opname,0), null, 0, null, WmTypes.WM_OP_INVOKE_REGION_WIN, 0);
 			}
 		}
 	}
@@ -399,7 +399,7 @@ public int run(bContext C, wmOperator op, wmEvent event)
 		ar.flag ^= ScreenTypes.RGN_FLAG_HIDDEN;
 		ar.v2d.flag &= ~View2dTypes.V2D_IS_INITIALISED; /* XXX should become hide/unhide api? */
 		
-		Area.ED_area_initialize((GL2)GLU.getCurrentGL(), bContext.CTX_wm_manager(C), bContext.CTX_wm_window(C), sa);
+		Area.ED_area_initialize((GL2)GLU.getCurrentGL(), C, bContext.CTX_wm_manager(C), bContext.CTX_wm_window(C), sa);
 //		Area.ED_area_initialize(bContext.CTX_wm_manager(C), bContext.CTX_wm_window(C), sa);
 		Area.ED_area_tag_redraw(sa);
 	}

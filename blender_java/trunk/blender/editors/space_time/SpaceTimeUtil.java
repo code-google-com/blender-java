@@ -230,11 +230,11 @@ static void time_draw_keyframes(GL2 gl, bContext C, SpaceTime stime, ARegion ar)
 
 /* add handlers, stuff you only do once or on area/region changes */
 public static ARegionType.Init time_main_area_init = new ARegionType.Init() {
-public void run(wmWindowManager wm, ARegion ar)
+public void run(bContext C, wmWindowManager wm, ARegion ar)
 {
 	wmKeyMap keymap;
 
-	View2dUtil.UI_view2d_region_reinit(ar.v2d, View2dUtil.V2D_COMMONVIEW_CUSTOM, ar.winx, ar.winy);
+	View2dUtil.UI_view2d_region_reinit(C, ar.v2d, View2dUtil.V2D_COMMONVIEW_CUSTOM, ar.winx, ar.winy);
 
 	/* own keymap */
 	keymap= WmKeymap.WM_keymap_find(wm.defaultconf, "TimeLine", SpaceTypes.SPACE_TIME, 0);
@@ -307,9 +307,9 @@ public void run(ARegion ar, wmNotifier wmn)
 
 /* add handlers, stuff you only do once or on area/region changes */
 public static ARegionType.Init time_header_area_init = new ARegionType.Init() {
-public void run(wmWindowManager wm, ARegion ar)
+public void run(bContext C, wmWindowManager wm, ARegion ar)
 {
-	Area.ED_region_header_init(ar);
+	Area.ED_region_header_init(C, ar);
 }};
 
 public static ARegionType.Draw time_header_area_draw = new ARegionType.Draw() {

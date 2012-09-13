@@ -26,8 +26,6 @@
  */
 package blender.editors.uinterface;
 
-import static blender.blenkernel.Blender.U;
-
 import javax.media.opengl.GL2;
 
 import blender.blenkernel.UtilDefines;
@@ -37,7 +35,6 @@ import blender.blenlib.Rct;
 import blender.editors.screen.Area;
 import blender.makesdna.View2dTypes;
 import blender.makesdna.sdna.ARegion;
-//import blender.makesdna.sdna.Scene;
 import blender.makesdna.sdna.ScrArea;
 import blender.makesdna.sdna.View2D;
 import blender.makesdna.sdna.bScreen;
@@ -248,10 +245,10 @@ static void view2d_masks(View2D v2d)
  *	- this function should only be called from region init() callbacks, where it is expected that
  *	  this is called before UI_view2d_size_update(), as this one checks that the rects are properly initialised. 
  */
-public static void UI_view2d_region_reinit(View2D v2d, int type, int winx, int winy)
+public static void UI_view2d_region_reinit(bContext C, View2D v2d, int type, int winx, int winy)
 {
 	short tot_changed= 0, init= 0;
-	uiStyle style= (uiStyle)U.uistyles.first;
+	uiStyle style= (uiStyle)bContext.getUserDef(C).uistyles.first;
 
 	/* initialise data if there is a need for such */
 	if ((v2d.flag & View2dTypes.V2D_IS_INITIALISED) == 0) {
@@ -1736,7 +1733,7 @@ public static void UI_view2d_scrollers_draw(GL2 gl, bContext C, View2D v2d, View
 	if ((scroll & View2dTypes.V2D_SCROLL_HORIZONTAL)!=0) {
 		/* only draw scrollbar when it doesn't fill the entire space */
 		if(vs.horfull==0) {
-			bTheme btheme= (bTheme)U.themes.first;
+			bTheme btheme= (bTheme)bContext.getUserDef(C).themes.first;
             uiWidgetColors wcol= wcolCopy(btheme.tui.wcol_scroll);
 			rcti slider = new rcti();
 			int state;
@@ -1844,7 +1841,7 @@ public static void UI_view2d_scrollers_draw(GL2 gl, bContext C, View2D v2d, View
 	if ((scroll & View2dTypes.V2D_SCROLL_VERTICAL)!=0) {
 		/* only draw scrollbar when it doesn't fill the entire space */
 		if(vs.vertfull==0) {
-			bTheme btheme= (bTheme)U.themes.first;
+			bTheme btheme= (bTheme)bContext.getUserDef(C).themes.first;
             uiWidgetColors wcol= wcolCopy(btheme.tui.wcol_scroll);
 			rcti slider = new rcti();
 			int state;

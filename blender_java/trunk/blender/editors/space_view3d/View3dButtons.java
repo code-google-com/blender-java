@@ -62,7 +62,7 @@ import blender.makesdna.sdna.ScrArea;
 import blender.makesdna.sdna.View3D;
 import blender.makesdna.sdna.bObject;
 import blender.makesdna.sdna.wmOperator;
-import blender.windowmanager.WmOperators.OpFunc;
+import blender.windowmanager.WmOperatorsUtil.OpFunc;
 import blender.windowmanager.WmTypes.wmEvent;
 
 //#include <stdio.h>
@@ -1779,7 +1779,7 @@ public int run(bContext C, wmOperator op, wmEvent event)
 		ar.flag ^= ScreenTypes.RGN_FLAG_HIDDEN;
 		ar.v2d.flag &= ~View2dTypes.V2D_IS_INITIALISED; /* XXX should become hide/unhide api? */
 
-		Area.ED_area_initialize((GL2)GLU.getCurrentGL(), bContext.CTX_wm_manager(C), bContext.CTX_wm_window(C), sa);
+		Area.ED_area_initialize((GL2)GLU.getCurrentGL(), C, bContext.CTX_wm_manager(C), bContext.CTX_wm_window(C), sa);
 //		Area.ED_area_initialize(bContext.CTX_wm_manager(C), bContext.CTX_wm_window(C), sa);
 		Area.ED_area_tag_redraw(sa);
 	}

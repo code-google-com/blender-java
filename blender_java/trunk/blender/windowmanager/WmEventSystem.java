@@ -27,19 +27,12 @@
  */
 package blender.windowmanager;
 
-import static blender.blenkernel.Blender.G;
-import static blender.blenkernel.Blender.U;
-
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
-import javax.media.opengl.GL2;
 import javax.swing.JFileChooser;
 
-import blender.blenkernel.Global;
-import blender.blenkernel.Main;
-import blender.blenkernel.ObjectUtil;
 import blender.blenkernel.bContext;
 import blender.blenlib.ListBaseUtil;
 import blender.blenlib.Rct;
@@ -52,11 +45,9 @@ import blender.makesdna.UserDefTypes;
 import blender.makesdna.WindowManagerTypes;
 import blender.makesdna.WindowManagerTypes.wmOperatorType;
 import blender.makesdna.sdna.ARegion;
-import blender.makesdna.sdna.Base;
 import blender.makesdna.sdna.Link;
 import blender.makesdna.sdna.ListBase;
 import blender.makesdna.sdna.ReportList;
-import blender.makesdna.sdna.Scene;
 import blender.makesdna.sdna.ScrArea;
 import blender.makesdna.sdna.bScreen;
 import blender.makesdna.sdna.rcti;
@@ -309,25 +300,26 @@ public static void wm_event_do_notifiers(bContext C)
 			}
 		}
 
-		Scene sce, scene= (Scene)win.screen.scene;
-		Base base;
-		if(G.rendering==0) { // XXX make lock in future, or separated derivedmesh users in scene
-
-			/* update all objects, ipos, matrices, displists, etc. Flags set by depgraph or manual,
-				no layer check here, gets correct flushed */
-			/* sets first, we allow per definition current scene to have dependencies on sets */
-			if(scene.set!=null) {
-//				for(SETLOOPER(scene.set, base))
-                                for(sce= scene.set, base= (Base)sce.base.first; base!=null; base= (Base)(base.next!=null?base.next:sce.set!=null?(sce=sce.set).base.first:null))
-					ObjectUtil.object_handle_update(scene, base.object);
-			}
-
-			for(base= (Base)scene.base.first; base!=null; base= base.next) {
-				ObjectUtil.object_handle_update(scene, base.object);
-			}
-
-//			BKE_ptcache_quick_cache_all(scene);
-		}
+		bContext.scene_handle_update(C, win.screen.scene);
+//		Scene sce, scene= (Scene)win.screen.scene;
+//		Base base;
+//		if(G.rendering==0) { // XXX make lock in future, or separated derivedmesh users in scene
+//
+//			/* update all objects, ipos, matrices, displists, etc. Flags set by depgraph or manual,
+//				no layer check here, gets correct flushed */
+//			/* sets first, we allow per definition current scene to have dependencies on sets */
+//			if(scene.set!=null) {
+////				for(SETLOOPER(scene.set, base))
+//                                for(sce= scene.set, base= (Base)sce.base.first; base!=null; base= (Base)(base.next!=null?base.next:sce.set!=null?(sce=sce.set).base.first:null))
+//					ObjectUtil.object_handle_update(scene, base.object);
+//			}
+//
+//			for(base= (Base)scene.base.first; base!=null; base= base.next) {
+//				ObjectUtil.object_handle_update(scene, base.object);
+//			}
+//
+////			BKE_ptcache_quick_cache_all(scene);
+//		}
 	}
 	bContext.CTX_wm_window_set(C, null);
 }
@@ -517,7 +509,7 @@ static int wm_operator_invoke(bContext C, wmOperatorType ot, wmEvent event, Poin
 /* invokes operator in context */
 public static int WM_operator_name_call(bContext C, String opstring, int context, Object properties)
 {
-	wmOperatorType ot= WmOperators.WM_operatortype_find(opstring, false);
+	wmOperatorType ot= WmOperatorsUtil.WM_operatortype_find(opstring, false);
 	wmWindow window= bContext.CTX_wm_window(C);
 	wmEvent event;
 
@@ -703,41 +695,41 @@ public static void WM_event_remove_handlers(bContext C, ListBase<wmEventHandler>
 }
 
 /* do userdef mappings */
-static int wm_userdef_event_map(int kmitype)
+static int wm_userdef_event_map(bContext C, int kmitype)
 {
 	switch(kmitype) {
 		case WmEventTypes.SELECTMOUSE:
-			if((U.flag & UserDefTypes.USER_LMOUSESELECT)!=0)
+			if((bContext.getUserDef(C).flag & UserDefTypes.USER_LMOUSESELECT)!=0)
 				return WmEventTypes.LEFTMOUSE;
 			else
 				return WmEventTypes.RIGHTMOUSE;
 
 		case WmEventTypes.ACTIONMOUSE:
-			if((U.flag & UserDefTypes.USER_LMOUSESELECT)!=0)
+			if((bContext.getUserDef(C).flag & UserDefTypes.USER_LMOUSESELECT)!=0)
 				return WmEventTypes.RIGHTMOUSE;
 			else
 				return WmEventTypes.LEFTMOUSE;
 
 		case WmEventTypes.WHEELOUTMOUSE:
-			if((U.uiflag & UserDefTypes.USER_WHEELZOOMDIR)!=0)
+			if((bContext.getUserDef(C).uiflag & UserDefTypes.USER_WHEELZOOMDIR)!=0)
 				return WmEventTypes.WHEELUPMOUSE;
 			else
 				return WmEventTypes.WHEELDOWNMOUSE;
 
 		case WmEventTypes.WHEELINMOUSE:
-			if((U.uiflag & UserDefTypes.USER_WHEELZOOMDIR)!=0)
+			if((bContext.getUserDef(C).uiflag & UserDefTypes.USER_WHEELZOOMDIR)!=0)
 				return WmEventTypes.WHEELDOWNMOUSE;
 			else
 				return WmEventTypes.WHEELUPMOUSE;
 
 		case WmEventTypes.EVT_TWEAK_A:
-			if((U.flag & UserDefTypes.USER_LMOUSESELECT)!=0)
+			if((bContext.getUserDef(C).flag & UserDefTypes.USER_LMOUSESELECT)!=0)
 				return WmEventTypes.EVT_TWEAK_R;
 			else
 				return WmEventTypes.EVT_TWEAK_L;
 
 		case WmEventTypes.EVT_TWEAK_S:
-			if((U.flag & UserDefTypes.USER_LMOUSESELECT)!=0)
+			if((bContext.getUserDef(C).flag & UserDefTypes.USER_LMOUSESELECT)!=0)
 				return WmEventTypes.EVT_TWEAK_L;
 			else
 				return WmEventTypes.EVT_TWEAK_R;
@@ -746,9 +738,9 @@ static int wm_userdef_event_map(int kmitype)
 	return kmitype;
 }
 
-static boolean wm_eventmatch(wmEvent winevent, wmKeyMapItem kmi)
+static boolean wm_eventmatch(bContext C, wmEvent winevent, wmKeyMapItem kmi)
 {
-	int kmitype= wm_userdef_event_map(kmi.type);
+	int kmitype= wm_userdef_event_map(C, kmi.type);
 //        System.out.println("wm_eventmatch kmitype: "+kmitype);
 //        System.out.println("wm_eventmatch winevent.type: "+winevent.type);
 
@@ -786,13 +778,13 @@ static boolean wm_event_always_pass(wmEvent event)
 }
 
 /* operator exists */
-static void wm_event_modalkeymap(wmOperator op, wmEvent event)
+static void wm_event_modalkeymap(bContext C, wmOperator op, wmEvent event)
 {
 	if(((wmOperatorType)op.type).modalkeymap!=null) {
 		wmKeyMapItem kmi;
 
 		for(kmi= (wmKeyMapItem)((wmOperatorType)op.type).modalkeymap.items.first; kmi!=null; kmi= kmi.next) {
-			if(wm_eventmatch(event, kmi)) {
+			if(wm_eventmatch(C, event, kmi)) {
 
 				event.type= WmEventTypes.EVT_MODAL_MAP;
 				event.val= kmi.propvalue;
@@ -819,7 +811,7 @@ static int wm_handler_operator_call(bContext C, ListBase handlers, wmEventHandle
 
 			wm_handler_op_context(C, handler);
 			wm_region_mouse_co(C, event);
-			wm_event_modalkeymap(op, event);
+			wm_event_modalkeymap(C, op, event);
 
 			retval= ot.modal.run(C, op, event);
 
@@ -877,7 +869,7 @@ static int wm_handler_operator_call(bContext C, ListBase handlers, wmEventHandle
 	}
 	else {
 //                System.out.println("wm_handler_operator_call 2");
-		wmOperatorType ot= WmOperators.WM_operatortype_find(StringUtil.toJString((byte[])event.keymap_idname,0), false);
+		wmOperatorType ot= WmOperatorsUtil.WM_operatortype_find(StringUtil.toJString((byte[])event.keymap_idname,0), false);
 
 		if(ot!=null)
 			retval= wm_operator_invoke(C, ot, event, properties);
@@ -1117,7 +1109,7 @@ static int wm_handlers_do(bContext C, wmEvent event, ListBase<wmEventHandler> ha
 //				for(kmi= (wmKeyMapItem)handler.keymap.first; kmi!=null; kmi= kmi.next) {
 				for(kmi= (wmKeyMapItem)keymap.items.first; kmi!=null; kmi= kmi.next) {
 //                                        System.err.println("wm_handlers_do keymap item");
-					if(wm_eventmatch(event, kmi)) {
+					if(wm_eventmatch(C, event, kmi)) {
 //                                                System.err.println("wm_handlers_do keymap item event");
 						event.keymap_idname= kmi.idname;	/* weak, but allows interactive callback to not use rawkey */
 
@@ -1280,7 +1272,7 @@ public static void wm_event_do_handlers(bContext C)
 			
 			/* builtin tweak, if action is break it removes tweak */
 			if(!wm_event_always_pass(event))
-				WmOperators.wm_tweakevent_test(C, event, action);
+				WmOperatorsUtil.wm_tweakevent_test(C, event, action);
 
 			if(wm_event_always_pass(event) || action==WM_HANDLER_CONTINUE) {
 				ScrArea sa;

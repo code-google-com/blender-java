@@ -134,7 +134,7 @@ public uiBlock run(bContext C, ARegion ar, Object arg_unused)
 	}
 	else {
 		UI.uiBlockSetDirection(block, UI.UI_TOP);
-		UI.uiBlockFlipOrder(block);
+		UI.uiBlockFlipOrder(C, block);
 	}
 
 	UI.uiTextBoundsBlock(block, 50);
@@ -209,7 +209,7 @@ public static void outliner_header_buttons(GL2 gl, bContext C, ARegion ar)
 
 	if((sa.flag & ScreenTypes.HEADER_NO_PULLDOWN)==0) {
 
-		xmax= EdUtil.GetButStringLength("View");
+		xmax= EdUtil.GetButStringLength(C, "View");
 
                 Pointer<ScrArea> sa_p = new Pointer<ScrArea>() {
                     public ScrArea get() {

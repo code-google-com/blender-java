@@ -61,17 +61,16 @@ import blender.makesdna.sdna.wmKeyConfig;
 import blender.makesdna.sdna.wmKeyMap;
 import blender.makesdna.sdna.wmOperator;
 import blender.makesdna.sdna.wmWindow;
-import blender.makesdna.sdna.wmWindowManager;
 import blender.makesrna.RnaAccess;
 import blender.makesrna.RnaDefine;
 import blender.makesrna.RNATypes.EnumPropertyItem;
 import blender.windowmanager.WmEventSystem;
 import blender.windowmanager.WmEventTypes;
 import blender.windowmanager.WmKeymap;
-import blender.windowmanager.WmOperators;
+import blender.windowmanager.WmOperatorsUtil;
 import blender.windowmanager.WmTypes;
 import blender.windowmanager.WmWindow;
-import blender.windowmanager.WmOperators.OpFunc;
+import blender.windowmanager.WmOperatorsUtil.OpFunc;
 import blender.windowmanager.WmTypes.wmEvent;
 
 public class ScreenOps {
@@ -706,7 +705,7 @@ public int run(bContext C, wmOperator op, wmEvent event)
 	newwin= WmWindow.WM_window_open(C, rect);
 
 	/* allocs new screen and adds to newly created window, using window size */
-	newsc= ScreenEdit.ED_screen_add(newwin, bContext.CTX_data_scene(C), sc.id.name,2);
+	newsc= ScreenEdit.ED_screen_add(C, newwin, bContext.CTX_data_scene(C), sc.id.name,2);
 	newwin.screen= newsc;
 
 	/* copy area to new screen */
@@ -2146,7 +2145,7 @@ public void run(wmOperatorType ot)
 	ot.idname= "SCREEN_OT_region_split";
 
 	/* api callbacks */
-	ot.invoke= WmOperators.WM_menu_invoke;
+	ot.invoke= WmOperatorsUtil.WM_menu_invoke;
 	ot.exec= region_split_exec;
 	ot.poll= ED_operator_areaactive;
 
@@ -2360,18 +2359,18 @@ public int run(bContext C, wmOperator op, wmEvent event)
 	
 	// XXX SCREEN_OT_region_flip doesn't work - gets wrong context for active region, so added custom operator
 	if (ar.alignment == ScreenTypes.RGN_ALIGN_TOP)
-		UILayout.uiItemO(layout, "Flip to Bottom", UI.ICON_NULL, "SCREEN_OT_header_flip");
+		UILayout.uiItemO(layout, C, "Flip to Bottom", UI.ICON_NULL, "SCREEN_OT_header_flip");
 	else
-		UILayout.uiItemO(layout, "Flip to Top", UI.ICON_NULL, "SCREEN_OT_header_flip");
+		UILayout.uiItemO(layout, C, "Flip to Top", UI.ICON_NULL, "SCREEN_OT_header_flip");
 	
 	UILayout.uiItemS(layout);
 	
 	/* file browser should be fullscreen all the time, but other regions can be maximised/restored... */
 	if (sa.spacetype != SpaceTypes.SPACE_FILE) {
 		if (sa.full!=null) 
-			UILayout.uiItemO(layout, "Tile Area", UI.ICON_NULL, "SCREEN_OT_screen_full_area");
+			UILayout.uiItemO(layout, C, "Tile Area", UI.ICON_NULL, "SCREEN_OT_screen_full_area");
 		else
-			UILayout.uiItemO(layout, "Maximize Area", UI.ICON_NULL, "SCREEN_OT_screen_full_area");
+			UILayout.uiItemO(layout, C, "Maximize Area", UI.ICON_NULL, "SCREEN_OT_screen_full_area");
 	}
 	
 	UIRegions.uiPupMenuEnd(C, pup);
@@ -3285,36 +3284,36 @@ public void run(wmOperatorType ot)
 public static void ED_operatortypes_screen()
 {
 	/* generic UI stuff */
-	WmOperators.WM_operatortype_append(SCREEN_OT_actionzone);
+	WmOperatorsUtil.WM_operatortype_append(SCREEN_OT_actionzone);
 //	WmOperators.WM_operatortype_append(SCREEN_OT_repeat_last);
 //	WmOperators.WM_operatortype_append(SCREEN_OT_repeat_history);
 //	WmOperators.WM_operatortype_append(SCREEN_OT_redo_last);
 
 	/* screen tools */
-	WmOperators.WM_operatortype_append(SCREEN_OT_area_move);
-	WmOperators.WM_operatortype_append(SCREEN_OT_area_split);
-	WmOperators.WM_operatortype_append(SCREEN_OT_area_join);
-	WmOperators.WM_operatortype_append(SCREEN_OT_area_dupli);
-	WmOperators.WM_operatortype_append(SCREEN_OT_area_swap);
-	WmOperators.WM_operatortype_append(SCREEN_OT_region_quadview);
-	WmOperators.WM_operatortype_append(SCREEN_OT_region_scale);
-	WmOperators.WM_operatortype_append(SCREEN_OT_region_flip);
-	WmOperators.WM_operatortype_append(SCREEN_OT_header_flip);
-	WmOperators.WM_operatortype_append(SCREEN_OT_header_toolbox);
-	WmOperators.WM_operatortype_append(SCREEN_OT_screen_set);
+	WmOperatorsUtil.WM_operatortype_append(SCREEN_OT_area_move);
+	WmOperatorsUtil.WM_operatortype_append(SCREEN_OT_area_split);
+	WmOperatorsUtil.WM_operatortype_append(SCREEN_OT_area_join);
+	WmOperatorsUtil.WM_operatortype_append(SCREEN_OT_area_dupli);
+	WmOperatorsUtil.WM_operatortype_append(SCREEN_OT_area_swap);
+	WmOperatorsUtil.WM_operatortype_append(SCREEN_OT_region_quadview);
+	WmOperatorsUtil.WM_operatortype_append(SCREEN_OT_region_scale);
+	WmOperatorsUtil.WM_operatortype_append(SCREEN_OT_region_flip);
+	WmOperatorsUtil.WM_operatortype_append(SCREEN_OT_header_flip);
+	WmOperatorsUtil.WM_operatortype_append(SCREEN_OT_header_toolbox);
+	WmOperatorsUtil.WM_operatortype_append(SCREEN_OT_screen_set);
 //	WmOperators.WM_operatortype_append(SCREEN_OT_screen_full_area);
 //	WmOperators.WM_operatortype_append(SCREEN_OT_back_to_previous);
 //	WmOperators.WM_operatortype_append(SCREEN_OT_screenshot);
 //	WmOperators.WM_operatortype_append(SCREEN_OT_screencast);
-	WmOperators.WM_operatortype_append(SCREEN_OT_userpref_show);
+	WmOperatorsUtil.WM_operatortype_append(SCREEN_OT_userpref_show);
 
 	/*frame changes*/
 //	WmOperators.WM_operatortype_append(SCREEN_OT_frame_offset);
-	WmOperators.WM_operatortype_append(SCREEN_OT_frame_jump);
-	WmOperators.WM_operatortype_append(SCREEN_OT_keyframe_jump);
+	WmOperatorsUtil.WM_operatortype_append(SCREEN_OT_frame_jump);
+	WmOperatorsUtil.WM_operatortype_append(SCREEN_OT_keyframe_jump);
 
 //	WmOperators.WM_operatortype_append(SCREEN_OT_animation_step);
-	WmOperators.WM_operatortype_append(SCREEN_OT_animation_play);
+	WmOperatorsUtil.WM_operatortype_append(SCREEN_OT_animation_play);
 //	WM_operatortype_append(SCREEN_OT_animation_cancel);
 	
 //	/* new/delete */

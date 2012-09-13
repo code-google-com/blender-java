@@ -156,7 +156,7 @@ public static class SpaceType extends Link<SpaceType> {
 public static class ARegionType extends Link<ARegionType> {
 
     public static interface Init {
-        public void run(wmWindowManager wm, ARegion ar);
+        public void run(bContext C, wmWindowManager wm, ARegion ar);
     }
 
     public static interface Draw {

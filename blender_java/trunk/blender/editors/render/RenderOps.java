@@ -1,6 +1,6 @@
 package blender.editors.render;
 
-import blender.windowmanager.WmOperators;
+import blender.windowmanager.WmOperatorsUtil;
 
 public class RenderOps {
 //	/**
@@ -79,7 +79,7 @@ public class RenderOps {
 //		WM_operatortype_append(RENDER_OT_view_cancel);
 
 		/* render_opengl.c */
-		WmOperators.WM_operatortype_append(RenderOpengl.RENDER_OT_opengl);
+		WmOperatorsUtil.WM_operatortype_append(RenderOpengl.RENDER_OT_opengl);
 	}
 
 }

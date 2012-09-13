@@ -6,7 +6,7 @@ import blender.makesdna.WindowManagerTypes;
 import blender.makesdna.WindowManagerTypes.wmOperatorType;
 import blender.makesdna.sdna.wmOperator;
 import blender.makesrna.RnaDefine;
-import blender.windowmanager.WmOperators.OpFunc;
+import blender.windowmanager.WmOperatorsUtil.OpFunc;
 import blender.windowmanager.WmTypes.wmEvent;
 
 public class RenderOpengl {

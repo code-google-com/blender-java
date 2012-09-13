@@ -63,7 +63,7 @@ import blender.makesrna.RNATypes.EnumPropertyItem;
 import blender.windowmanager.WmEventSystem;
 import blender.windowmanager.WmEventTypes;
 import blender.windowmanager.WmTypes;
-import blender.windowmanager.WmOperators.OpFunc;
+import blender.windowmanager.WmOperatorsUtil.OpFunc;
 import blender.windowmanager.WmTypes.wmEvent;
 
 public class View3dEdit {

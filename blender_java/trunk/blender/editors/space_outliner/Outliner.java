@@ -46,7 +46,7 @@ import blender.makesrna.RnaDefine;
 import blender.makesrna.RNATypes.PointerRNA;
 import blender.windowmanager.WmEventSystem;
 import blender.windowmanager.WmTypes;
-import blender.windowmanager.WmOperators.OpFunc;
+import blender.windowmanager.WmOperatorsUtil.OpFunc;
 import blender.windowmanager.WmTypes.wmEvent;
 
 public class Outliner {
@@ -2063,7 +2063,7 @@ public class Outliner {
 		
 		sce= (Scene)outliner_search_back(soops, te, DNA_ID.ID_SCE);
 		if(sce!=null && scene != sce) {
-			ScreenEdit.ED_screen_set_scene(C, sce);
+			SceneUtil.ED_screen_set_scene(C, sce);
 		}
 		
 		/* find associated base in current scene */
@@ -2616,7 +2616,7 @@ public class Outliner {
 					/* editmode? */
 					if(te.idcode==DNA_ID.ID_SCE) {
 						if(scene!=(Scene)tselem[tselem_p].id) {
-							ScreenEdit.ED_screen_set_scene(C, (Scene)tselem[tselem_p].id);
+							SceneUtil.ED_screen_set_scene(C, (Scene)tselem[tselem_p].id);
 						}
 					}
 					else if(te.idcode==DNA_ID.ID_GR) {
@@ -4863,9 +4863,9 @@ public class Outliner {
 			else if((tselem[tselem_p].type == TSE_RNA_PROPERTY || tselem[tselem_p].type == TSE_RNA_ARRAY_ELEM)) Resources.UI_ThemeColorBlend(gl, Resources.TH_BACK, Resources.TH_TEXT, 0.75f);
 			else Resources.UI_ThemeColor(gl, Resources.TH_TEXT);
 			
-			UIStyle.UI_DrawString(startx+offsx, starty[0]+5, StringUtil.toCString(te.name),0);
+			UIStyle.UI_DrawString(C, startx+offsx, starty[0]+5, StringUtil.toCString(te.name),0);
 			
-			offsx+= (int)(OL_X + UIStyle.UI_GetStringWidth(StringUtil.toCString(te.name),0));
+			offsx+= (int)(OL_X + UIStyle.UI_GetStringWidth(C, StringUtil.toCString(te.name),0));
 			
 			/* closed item, we draw the icons, not when it's a scene, or master-server list though */
 			if((tselem[tselem_p].flag & OutlinerTypes.TSE_CLOSED)!=0) {

@@ -24,9 +24,9 @@
  */
 package blender.editors.uinterface;
 
-import static blender.blenkernel.Blender.U;
 import blender.blenfont.Blf;
 import blender.blenfont.BlfTypes;
+import blender.blenkernel.bContext;
 import blender.blenlib.Arithb;
 import blender.blenlib.ListBaseUtil;
 import blender.blenlib.StringUtil;
@@ -111,16 +111,16 @@ static uiStyle ui_style_new(ListBase<uiStyle> styles, String name)
 	return style;
 }
 
-static uiFont uifont_to_blfont(int id)
+static uiFont uifont_to_blfont(bContext C, int id)
 {
-	uiFont font= (uiFont)U.uifonts.first;
+	uiFont font= (uiFont)bContext.getUserDef(C).uifonts.first;
 	
 	for(; font!=null; font= font.next) {
 		if(font.uifont_id==id) {
 			return font;
 		}
 	}
-	return (uiFont)U.uifonts.first;
+	return (uiFont)bContext.getUserDef(C).uifonts.first;
 }
 
 /* *************** draw ************************ */
@@ -228,14 +228,14 @@ public static void uiStyleFontDrawRotated(uiFontStyle fs, rcti rect, byte[] str,
 /* ************** helpers ************************ */
 
 /* temporarily, does widget font */
-public static int UI_GetStringWidth(byte[] str, int offset)
+public static int UI_GetStringWidth(bContext C, byte[] str, int offset)
 {
 ////	uiStyle style= (uiStyle)U.uistyles.first;
 ////
 ////	uiStyleFontSet(style.widget);
 //	return (int)Blf.BLF_width(str,offset);
 	
-	uiStyle style= (uiStyle)U.uistyles.first;
+	uiStyle style= (uiStyle)bContext.getUserDef(C).uistyles.first;
 	uiFontStyle fstyle= style.widget;
 	int width;
 	
@@ -252,7 +252,7 @@ public static int UI_GetStringWidth(byte[] str, int offset)
 }
 
 /* temporarily, does widget font */
-public static void UI_DrawString(float x, float y, byte[] str, int offset)
+public static void UI_DrawString(bContext C, float x, float y, byte[] str, int offset)
 {
 //	uiStyle style= (uiStyle)U.uistyles.first;
 //
@@ -260,7 +260,7 @@ public static void UI_DrawString(float x, float y, byte[] str, int offset)
 //	Blf.BLF_position(x, y, 0.0f);
 //	Blf.BLF_draw(str,offset);
 	
-	uiStyle style= (uiStyle)U.uistyles.first;
+	uiStyle style= (uiStyle)bContext.getUserDef(C).uistyles.first;
 	
 	if (style.widget.kerning == 1)
 		Blf.BLF_enable(style.widget.uifont_id, BlfTypes.BLF_KERNING_DEFAULT);
@@ -277,24 +277,24 @@ public static void UI_DrawString(float x, float y, byte[] str, int offset)
 
 /* called on each .B.blend read */
 /* reading without uifont will create one */
-public static void uiStyleInit()
+public static void uiStyleInit(bContext C)
 {
-	uiFont font= (uiFont)U.uifonts.first;
-	uiStyle style= (uiStyle)U.uistyles.first;
+	uiFont font= (uiFont)bContext.getUserDef(C).uifonts.first;
+	uiStyle style= (uiStyle)bContext.getUserDef(C).uistyles.first;
 
 	/* recover from uninitialized dpi */
-	U.dpi = Arithb.CLAMP(U.dpi, 72, 240);
+	bContext.getUserDef(C).dpi = Arithb.CLAMP(bContext.getUserDef(C).dpi, 72, 240);
 
 	/* default builtin */
 	if(font==null) {
 		font= new uiFont();
-		ListBaseUtil.BLI_addtail(U.uifonts, font);
+		ListBaseUtil.BLI_addtail(bContext.getUserDef(C).uifonts, font);
 
 		StringUtil.strcpy(font.filename,0, StringUtil.toCString("default"),0);
 		font.uifont_id= UserDefTypes.UIFONT_DEFAULT;
 	}
 
-	for(font= (uiFont)U.uifonts.first; font!=null; font= font.next) {
+	for(font= (uiFont)bContext.getUserDef(C).uifonts.first; font!=null; font= font.next) {
 
         // TMP
         font.blf_id= (short)Blf.BLF_load_mem("default", null, 0);
@@ -317,14 +317,14 @@ public static void uiStyleInit()
 			 * Yes, this build the glyph cache and create
 			 * the texture.
 			 */
-			Blf.BLF_size(font.blf_id, 11, U.dpi);
-			Blf.BLF_size(font.blf_id, 12, U.dpi);
-			Blf.BLF_size(font.blf_id, 14, U.dpi);
+			Blf.BLF_size(font.blf_id, 11, bContext.getUserDef(C).dpi);
+			Blf.BLF_size(font.blf_id, 12, bContext.getUserDef(C).dpi);
+			Blf.BLF_size(font.blf_id, 14, bContext.getUserDef(C).dpi);
 		}
 	}
 
 	if(style==null) {
-		ui_style_new(U.uistyles, "Default Style");
+		ui_style_new(bContext.getUserDef(C).uistyles, "Default Style");
 	}
 	
 //	// XXX, this should be moved into a style, but for now best only load the monospaced font once.

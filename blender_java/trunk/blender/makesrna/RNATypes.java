@@ -505,9 +505,14 @@ public static class ExtensionRNA {
 	public StructRNA srna;
 
 //	public int (*call)(PointerRNA *, FunctionRNA *, ParameterList *);
-        public StructCallbackFunc call;
+    public StructCallbackFunc call;
 //	public void (*free)(void *data);
-        public StructFreeFunc free;
+    public StructFreeFunc free;
+        
+    public void free() {
+		if(free!=null)
+			free.run(data);
+	}
 };
 
 //#ifdef __cplusplus

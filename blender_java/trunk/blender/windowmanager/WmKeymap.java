@@ -57,11 +57,11 @@ static void keymap_properties_set(wmKeyMapItem kmi)
 {
 	PointerRNA[] ptr = {(PointerRNA)kmi.ptr};
 	IDProperty[] properties = {kmi.properties};
-	WmOperators.WM_operator_properties_alloc(ptr, properties, kmi.idname,0);
+	WmOperatorsUtil.WM_operator_properties_alloc(ptr, properties, kmi.idname,0);
 	kmi.ptr = ptr[0];
 	kmi.properties = properties[0];
 //	WmOperators.WM_operator_properties_alloc(kmi);
-	WmOperators.WM_operator_properties_sanitize((PointerRNA)kmi.ptr, true);
+	WmOperatorsUtil.WM_operator_properties_sanitize((PointerRNA)kmi.ptr, true);
 }
 
 ///* properties can be NULL, otherwise the arg passed is used and ownership is given to the kmi */
@@ -372,7 +372,7 @@ public static wmKeyMapItem WM_modalkeymap_add_item(wmKeyMap km, int type, int va
 
 public static void WM_modalkeymap_assign(wmKeyMap km, String opname)
 {
-	wmOperatorType ot= WmOperators.WM_operatortype_find(opname, false);
+	wmOperatorType ot= WmOperatorsUtil.WM_operatortype_find(opname, false);
 
 	if(ot!=null)
 		ot.modalkeymap= km;

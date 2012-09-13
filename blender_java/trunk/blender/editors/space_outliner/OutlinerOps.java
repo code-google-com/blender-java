@@ -34,7 +34,7 @@ import blender.makesdna.sdna.wmKeyMap;
 import blender.makesrna.RnaAccess;
 import blender.windowmanager.WmEventTypes;
 import blender.windowmanager.WmKeymap;
-import blender.windowmanager.WmOperators;
+import blender.windowmanager.WmOperatorsUtil;
 import blender.windowmanager.WmTypes;
 
 public class OutlinerOps {
@@ -45,7 +45,7 @@ public class OutlinerOps {
 public static SpaceType.OperatorTypes outliner_operatortypes = new SpaceType.OperatorTypes() {
 public void run()
 {
-	WmOperators.WM_operatortype_append(Outliner.OUTLINER_OT_item_activate);
+	WmOperatorsUtil.WM_operatortype_append(Outliner.OUTLINER_OT_item_activate);
 //	WmOperators.WM_operatortype_append(OUTLINER_OT_item_openclose);
 //	WmOperators.WM_operatortype_append(OUTLINER_OT_item_rename);
 //	WmOperators.WM_operatortype_append(OUTLINER_OT_operation);

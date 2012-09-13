@@ -865,7 +865,7 @@ public class RnaUILayout extends RnaStruct {
 		_data_p++;
 		index= ((Integer)_data[_data_p]);
 		
-		rna_uiItemR(_self, data, property, text, icon, expand, slider, toggle, icon_only, event, full_event, emboss, index);
+		rna_uiItemR(_self, C, data, property, text, icon, expand, slider, toggle, icon_only, event, full_event, emboss, index);
 	}};
 	
 	private static CallFunc UILayout_prop_search_call = new CallFunc() {
@@ -895,7 +895,7 @@ public class RnaUILayout extends RnaStruct {
 		_data_p++;
 		icon= ((Integer)_data[_data_p]);
 		
-		uiItemPointerR(_self, data, property, search_data, search_property, text, icon);
+		uiItemPointerR(_self, C, data, property, search_data, search_property, text, icon);
 	}};
 	
 	private static CallFunc UILayout_operator_call = new CallFunc() {
@@ -923,7 +923,7 @@ public class RnaUILayout extends RnaStruct {
 		_retdata= _data;
 		_retdata_p = _data_p;
 		
-		properties= rna_uiItemO(_self, operator, text, icon, emboss);
+		properties= rna_uiItemO(_self, C, operator, text, icon, emboss);
 		_retdata[_retdata_p]= properties;
 	}};
 	
@@ -948,7 +948,7 @@ public class RnaUILayout extends RnaStruct {
 		_data_p++;
 		icon= ((Integer)_data[_data_p]);
 		
-		uiItemMenuEnumO(_self, operator, property, text, icon);
+		uiItemMenuEnumO(_self, C, operator, property, text, icon);
 	}};
 	
 	private static CallFunc UILayout_label_call = new CallFunc() {
@@ -966,7 +966,7 @@ public class RnaUILayout extends RnaStruct {
 		_data_p++;
 		icon= ((Integer)_data[_data_p]);
 		
-		uiItemL(_self, text, icon);
+		uiItemL(_self, C, text, icon);
 	}};
 	
 	private static CallFunc UILayout_menu_call = new CallFunc() {

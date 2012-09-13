@@ -36,7 +36,6 @@ import blender.blenkernel.ScreenUtil.MenuType;
 import blender.blenlib.ListBaseUtil;
 import blender.blenlib.StringUtil;
 import blender.editors.screen.ScreenEdit;
-import blender.editors.space_api.SpaceTypeUtil;
 import blender.makesdna.WindowManagerTypes;
 import blender.makesdna.sdna.IDProperty;
 import blender.makesdna.sdna.Link;
@@ -200,8 +199,9 @@ public static void WM_menutype_free()
 	while(mt!=null) {
 		mt_next= mt.next;
 
-		if(mt.ext.free!=null)
-			mt.ext.free.run(mt.ext.data);
+//		if(mt.ext.free!=null)
+//			mt.ext.free.run(mt.ext.data);
+		mt.ext.free();
 
 		WM_menutype_freelink(mt);
 
@@ -211,24 +211,25 @@ public static void WM_menutype_free()
 
 /* ****************************************** */
 
-public static void WM_keymap_init(bContext C)
-{
-	wmWindowManager wm= bContext.CTX_wm_manager(C);
-	
-	if(wm.defaultconf==null)
-		wm.defaultconf= WmKeymap.WM_keyconfig_new(wm, "Blender");
-
-	if(wm!=null && bContext.CTX_py_init_get(C) && (wm.initialized & WindowManagerTypes.WM_INIT_KEYMAP) == 0) {
-		/* create default key config */
-//		WmOperators.wm_window_keymap(wm);
-		WmOperators.wm_window_keymap(wm.defaultconf);
-//		SpaceTypeUtil.ED_spacetypes_keymap(wm);
-		SpaceTypeUtil.ED_spacetypes_keymap(wm.defaultconf);
-		WmKeymap.WM_keyconfig_userdef();
-
-		wm.initialized |= WindowManagerTypes.WM_INIT_KEYMAP;
-	}
-}
+// moved to WmInitExit
+//public static void WM_keymap_init(bContext C)
+//{
+//	wmWindowManager wm= bContext.CTX_wm_manager(C);
+//	
+//	if(wm.defaultconf==null)
+//		wm.defaultconf= WmKeymap.WM_keyconfig_new(wm, "Blender");
+//
+//	if(wm!=null && bContext.CTX_py_init_get(C) && (wm.initialized & WindowManagerTypes.WM_INIT_KEYMAP) == 0) {
+//		/* create default key config */
+////		WmOperators.wm_window_keymap(wm);
+//		WmOperators.wm_window_keymap(wm.defaultconf);
+////		SpaceTypeUtil.ED_spacetypes_keymap(wm);
+//		SpaceTypeUtil.ED_spacetypes_keymap(wm.defaultconf);
+//		WmKeymap.WM_keyconfig_userdef();
+//
+//		wm.initialized |= WindowManagerTypes.WM_INIT_KEYMAP;
+//	}
+//}
 
 public static void wm_check(bContext C)
 {
@@ -248,7 +249,8 @@ public static void wm_check(bContext C)
 	//if (G.background==0) {
 		/* case: fileread */
 		if((wm.initialized & WindowManagerTypes.WM_INIT_WINDOW) == 0) {
-			WM_keymap_init(C);
+			bContext.CTX_wm_manager_init(C);
+//			WM_keymap_init(C);
 //			WM_autosave_init(wm);
 		}
 

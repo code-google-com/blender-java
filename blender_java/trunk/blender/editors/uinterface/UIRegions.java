@@ -26,8 +26,6 @@ package blender.editors.uinterface;
 
 //#include <stdarg.h>
 
-import static blender.blenkernel.Blender.U;
-
 import javax.media.opengl.GL2;
 import javax.media.opengl.glu.GLU;
 
@@ -1030,7 +1028,7 @@ public static void ui_searchbox_update(bContext C, ARegion ar, uiBut but, int re
 /************************* Creating Menu Blocks **********************/
 
 /* position block relative to but, result is in window space */
-static void ui_block_position(wmWindow window, ARegion butregion, uiBut but, uiBlock block)
+static void ui_block_position(bContext C, wmWindow window, ARegion butregion, uiBut but, uiBlock block)
 {
 	uiBut bt;
 	uiSafetyRct saferct;
@@ -1145,7 +1143,7 @@ static void ui_block_position(wmWindow window, ARegion butregion, uiBut but, uiB
 			if((dir1 & block.direction)==0) {
 				if((block.direction & UI.UI_SHIFT_FLIPPED)!=0)
 					xof+= dir2==UI.UI_LEFT?25:-25;
-				UI.uiBlockFlipOrder(block);
+				UI.uiBlockFlipOrder(C, block);
 			}
 		}
 		else if(dir1==UI.UI_DOWN) {
@@ -1156,7 +1154,7 @@ static void ui_block_position(wmWindow window, ARegion butregion, uiBut but, uiB
 			if((dir1 & block.direction)==0) {
 				if((block.direction & UI.UI_SHIFT_FLIPPED)!=0)
 					xof+= dir2==UI.UI_LEFT?25:-25;
-				UI.uiBlockFlipOrder(block);
+				UI.uiBlockFlipOrder(C, block);
 			}
 		}
 
@@ -1320,13 +1318,13 @@ public static uiPopupBlockHandle ui_popup_block_create(GL2 gl, bContext C, ARegi
 		/* only used for automatic toolbox, so can set the shift flag */
 		if((but.flag & UI.UI_MAKE_TOP)!=0) {
 			block.direction= UI.UI_TOP|UI.UI_SHIFT_FLIPPED;
-			UI.uiBlockFlipOrder(block);
+			UI.uiBlockFlipOrder(C, block);
 		}
 		if((but.flag & UI.UI_MAKE_DOWN)!=0) block.direction= UI.UI_DOWN|UI.UI_SHIFT_FLIPPED;
 		if((but.flag & UI.UI_MAKE_LEFT)!=0) block.direction |= UI.UI_LEFT;
 		if((but.flag & UI.UI_MAKE_RIGHT)!=0) block.direction |= UI.UI_RIGHT;
 
-		ui_block_position(window, butregion, but, block);
+		ui_block_position(C, window, butregion, but, block);
 	}
 	else {
 		/* keep a list of these, needed for pulldown menus */
@@ -1541,10 +1539,10 @@ public void run(bContext C, uiLayout layout, Object arg_str)
 	/* create title */
 	if(md.title!=null) {
 		if(md.titleicon!=0) {
-			UILayout.uiItemL(layout, StringUtil.toJString(md.title,0), md.titleicon);
+			UILayout.uiItemL(layout, C, StringUtil.toJString(md.title,0), md.titleicon);
 		}
 		else {
-			UILayout.uiItemL(layout, StringUtil.toJString(md.title,0), UI.ICON_NULL);
+			UILayout.uiItemL(layout, C, StringUtil.toJString(md.title,0), UI.ICON_NULL);
 			bt= block.buttons.last;
 			bt.flag= UI.UI_TEXT_LEFT;
 		}
@@ -1583,7 +1581,7 @@ public void run(bContext C, uiLayout layout, Object arg_str)
         };
 
 		if(entry.sepr!=0) {
-			UILayout.uiItemL(column, StringUtil.toJString(entry.str,0), entry.icon);
+			UILayout.uiItemL(column, C, StringUtil.toJString(entry.str,0), entry.icon);
 			bt= block.buttons.last;
 			bt.flag= UI.UI_TEXT_LEFT;
 		}
@@ -2884,7 +2882,7 @@ public uiBlock run(bContext C, uiPopupBlockHandle handle, Object arg_pup)
 			if(sa!=null && sa.headertype==ScreenTypes.HEADERDOWN) {
 				if(ar!=null && ar.regiontype == ScreenTypes.RGN_TYPE_HEADER) {
 					UI.uiBlockSetDirection(block, UI.UI_TOP);
-					UI.uiBlockFlipOrder(block);
+					UI.uiBlockFlipOrder(C, block);
 				}
 			}
 		}
@@ -2957,7 +2955,7 @@ public uiBlock run(bContext C, uiPopupBlockHandle handle, Object arg_pup)
 public static uiPopupBlockHandle ui_popup_menu_create(GL2 gl, bContext C, ARegion butregion, uiBut but, uiMenuCreateFunc menu_func, Object arg, String str)
 {
 	wmWindow window= bContext.CTX_wm_window(C);
-	uiStyle style= (uiStyle)U.uistyles.first;
+	uiStyle style= (uiStyle)bContext.getUserDef(C).uistyles.first;
 	uiPopupBlockHandle handle;
 	uiPopupMenu pup;
 //	uiMenuInfo info = new uiMenuInfo();
@@ -3015,7 +3013,7 @@ public static uiPopupBlockHandle ui_popup_menu_create(GL2 gl, bContext C, ARegio
 public static uiPopupBlockHandle ui_popup_menu_create(GL2 gl, bContext C, ARegion butregion, uiBut but, uiMenuCreateFunc menu_func, Object arg, byte[] str)
 {
 	wmWindow window= bContext.CTX_wm_window(C);
-	uiStyle style= (uiStyle)U.uistyles.first;
+	uiStyle style= (uiStyle)bContext.getUserDef(C).uistyles.first;
 	uiPopupBlockHandle handle;
 	uiPopupMenu pup;
 	
@@ -3068,7 +3066,7 @@ public static uiPopupBlockHandle ui_popup_menu_create(GL2 gl, bContext C, ARegio
 /* only return handler, and set optional title */
 public static uiPopupMenu uiPupMenuBegin(bContext C, String title, int icon)
 {
-	uiStyle style= (uiStyle)U.uistyles.first;
+	uiStyle style= (uiStyle)bContext.getUserDef(C).uistyles.first;
 	uiPopupMenu pup= new uiPopupMenu();
 	uiBut but;
 	

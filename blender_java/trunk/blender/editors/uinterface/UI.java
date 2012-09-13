@@ -26,8 +26,6 @@
  */
 package blender.editors.uinterface;
 
-import static blender.blenkernel.Blender.U;
-
 import java.net.URL;
 
 import javax.media.opengl.GL2;
@@ -63,7 +61,7 @@ import blender.makesrna.RNATypes.PointerRNA;
 import blender.makesrna.rna_internal_types.PropertyRNA;
 import blender.windowmanager.WmEventSystem;
 import blender.windowmanager.WmKeymap;
-import blender.windowmanager.WmOperators;
+import blender.windowmanager.WmOperatorsUtil;
 import blender.windowmanager.WmSubWindow;
 import blender.windowmanager.WmWindow;
 import blender.windowmanager.WmTypes.wmEvent;
@@ -815,9 +813,9 @@ public static void ui_block_translate(uiBlock block, int x, int y)
 	block.maxy += y;
 }
 
-static void ui_text_bounds_block(uiBlock block, float offset)
+static void ui_text_bounds_block(bContext C, uiBlock block, float offset)
 {
-	uiStyle style= (uiStyle)U.uistyles.first;	// XXX pass on as arg
+	uiStyle style= (uiStyle)bContext.getUserDef(C).uistyles.first;	// XXX pass on as arg
 	uiBut bt;
 	int i = 0, j, x1addval= (int)offset, nextcol;
 	int lastcol= 0, col= 0;
@@ -964,7 +962,7 @@ static void ui_popup_bounds_block(bContext C, uiBlock block, int bounds_calc)
 	if(bounds_calc==UI_BLOCK_BOUNDS_POPUP_MENU) {
 		if((block.flag & UI_BLOCK_LOOP)!=0) {
 			block.bounds= 50;
-			ui_text_bounds_block(block, block.minx);
+			ui_text_bounds_block(C, block, block.minx);
 		}
 	}
 
@@ -1352,7 +1350,7 @@ public static void uiEndBlock(bContext C, uiBlock block)
 
 	/* after keymaps! */
 	if(block.dobounds == UI_BLOCK_BOUNDS) ui_bounds_block(block);
-	else if(block.dobounds == UI_BLOCK_BOUNDS_TEXT) ui_text_bounds_block(block, 0.0f);
+	else if(block.dobounds == UI_BLOCK_BOUNDS_TEXT) ui_text_bounds_block(C, block, 0.0f);
 	else if(block.dobounds == UI_BLOCK_BOUNDS_POPUP_CENTER) ui_centered_bounds_block(C, block);
 	else if(block.dobounds!=0) ui_popup_bounds_block(C, block, block.dobounds);
 
@@ -1405,7 +1403,7 @@ static void ui_but_to_pixelrect(rcti rect, ARegion ar, uiBlock block, uiBut but)
 /* uses local copy of style, to scale things down, and allow widgets to change stuff */
 public static void uiDrawBlock(GL2 gl, bContext C, uiBlock block)
 {
-	uiStyle style= (uiStyle)U.uistyles.first;	// XXX pass on as arg
+	uiStyle style= (uiStyle)bContext.getUserDef(C).uistyles.first;	// XXX pass on as arg
 	ARegion ar;
 	uiBut but;
 	rcti rect = new rcti();
@@ -1449,7 +1447,7 @@ public static void uiDrawBlock(GL2 gl, bContext C, uiBlock block)
 
 	/* back */
 	if((block.flag & UI_BLOCK_LOOP)!=0)
-		UIWidgets.ui_draw_menu_back(gl, style, block, rect);
+		UIWidgets.ui_draw_menu_back(gl, C, style, block, rect);
 	else if(block.panel!=null)
 		UIPanel.ui_draw_aligned_panel(gl, style, block, rect);
 
@@ -3221,7 +3219,7 @@ public static uiBut ui_def_but_operator(uiBlock block, int type, String opname, 
 	uiBut but;
 	wmOperatorType ot;
 
-	ot= WmOperators.WM_operatortype_find(opname, false);
+	ot= WmOperatorsUtil.WM_operatortype_find(opname, false);
 
 	if(str==null) {
 		if(ot!=null) str= ot.name;
@@ -3635,13 +3633,13 @@ public static void uiBlockSetDirection(uiBlock block, int direction)
 }
 
 /* this call escapes if there's alignment flags */
-public static void uiBlockFlipOrder(uiBlock block)
+public static void uiBlockFlipOrder(bContext C, uiBlock block)
 {
 	ListBase lb = new ListBase();
 	uiBut but, next;
 	float centy, miny=10000, maxy= -10000;
 
-	if((U.uiflag & UserDefTypes.USER_MENUFIXEDORDER)!=0)
+	if((bContext.getUserDef(C).uiflag & UserDefTypes.USER_MENUFIXEDORDER)!=0)
 		return;
 	else if((block.flag & UI_BLOCK_NO_FLIP)!=0)
 		return;
@@ -3746,7 +3744,7 @@ public static PointerRNA uiButGetOperatorPtrRNA(uiBut but)
 {
 	if(but.optype!=null && but.opptr==null) {
 		but.opptr= new PointerRNA();
-		WmOperators.WM_operator_properties_create_ptr(but.opptr, but.optype);
+		WmOperatorsUtil.WM_operator_properties_create_ptr(but.opptr, but.optype);
 	}
 
 	return but.opptr;
@@ -3968,17 +3966,17 @@ public static uiBut uiDefSearchBut(uiBlock block, Pointer arg, int retval, BIFIc
 
 /* Program Init/Exit */
 
-public static void UI_init(URL url)
+public static void UI_init(bContext C, URL url)
 {
-	Resources.ui_resources_init(url);
+	Resources.ui_resources_init(C, url);
 }
 
 /* after reading userdef file */
-public static void UI_init_userdef()
+public static void UI_init_userdef(bContext C)
 {
 	/* fix saved themes */
 	Resources.init_userdef_do_versions();
-	UIStyle.uiStyleInit();
+	UIStyle.uiStyleInit(C);
 }
 
 //void UI_exit(void)

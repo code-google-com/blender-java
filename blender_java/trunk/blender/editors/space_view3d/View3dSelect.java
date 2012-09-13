@@ -56,7 +56,7 @@ import blender.makesrna.RnaAccess;
 import blender.makesrna.RnaDefine;
 import blender.windowmanager.WmEventSystem;
 import blender.windowmanager.WmTypes;
-import blender.windowmanager.WmOperators.OpFunc;
+import blender.windowmanager.WmOperatorsUtil.OpFunc;
 import blender.windowmanager.WmTypes.wmEvent;
 
 //import com.sun.opengl.util.BufferUtil;

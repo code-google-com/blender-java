@@ -38,7 +38,9 @@ import blender.editors.screen.ScreenEdit;
 import blender.editors.space_api.SpaceTypeUtil;
 import blender.editors.uinterface.UI;
 import blender.editors.util.EdUtil;
+import blender.makesdna.WindowManagerTypes;
 import blender.makesdna.sdna.wmWindow;
+import blender.makesdna.sdna.wmWindowManager;
 import blender.python.BpyInterface;
 import static blender.blenkernel.Blender.G;
 
@@ -184,7 +186,7 @@ public static void WM_init(bContext C, int argc, String[] argv)
 //		GPU_extensions_init();
 //		GPU_set_mipmap(!(U.gameflags & USER_DISABLE_MIPMAP));
 	
-		UI.UI_init(ResourceAnchor.class.getClassLoader().getResource("resources/icons/blenderbuttons.png"));
+		UI.UI_init(C, ResourceAnchor.class.getClassLoader().getResource("resources/icons/blenderbuttons.png"));
 	//}
 	
 //	clear_matcopybuf();
@@ -207,6 +209,25 @@ public static void WM_init(bContext C, int argc, String[] argv)
 //	BLI_strncpy(G.lib, G.main->name, FILE_MAX);
 	
 	Wm.initialized = true;
+}
+
+public static void WM_keymap_init(bContext C)
+{
+	wmWindowManager wm= bContext.CTX_wm_manager(C);
+	
+	if(wm.defaultconf==null)
+		wm.defaultconf= WmKeymap.WM_keyconfig_new(wm, "Blender");
+
+	if(wm!=null && bContext.CTX_py_init_get(C) && (wm.initialized & WindowManagerTypes.WM_INIT_KEYMAP) == 0) {
+		/* create default key config */
+//		WmOperators.wm_window_keymap(wm);
+		WmOperators.wm_window_keymap(wm.defaultconf);
+//		SpaceTypeUtil.ED_spacetypes_keymap(wm);
+		SpaceTypeUtil.ED_spacetypes_keymap(wm.defaultconf);
+		WmKeymap.WM_keyconfig_userdef();
+
+		wm.initialized |= WindowManagerTypes.WM_INIT_KEYMAP;
+	}
 }
 
 ///* free strings of open recent files */
@@ -251,7 +272,7 @@ public void run(bContext C)
 			ScreenEdit.ED_screen_exit(C, win, win.screen);
 		}
 	}
-	WmOperators.wm_operatortype_free();
+	WmOperatorsUtil.wm_operatortype_free();
 
 	/* all non-screen and non-space stuff editors did, like editmode */
 	if(C!=null)

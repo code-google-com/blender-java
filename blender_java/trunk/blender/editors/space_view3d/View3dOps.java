@@ -38,7 +38,7 @@ import blender.makesdna.sdna.wmKeyMapItem;
 import blender.makesrna.RnaAccess;
 import blender.windowmanager.WmEventTypes;
 import blender.windowmanager.WmKeymap;
-import blender.windowmanager.WmOperators;
+import blender.windowmanager.WmOperatorsUtil;
 import blender.windowmanager.WmTypes;
 
 public class View3dOps {
@@ -50,16 +50,16 @@ public void run()
 //public static void view3d_operatortypes()
 {
 //        System.out.println("view3d_operatortypes");
-	WmOperators.WM_operatortype_append(View3dEdit.VIEW3D_OT_viewrotate);
-	WmOperators.WM_operatortype_append(View3dEdit.VIEW3D_OT_viewmove);
-	WmOperators.WM_operatortype_append(View3dEdit.VIEW3D_OT_zoom);
-	WmOperators.WM_operatortype_append(View3dEdit.VIEW3D_OT_view_all);
-	WmOperators.WM_operatortype_append(View3dEdit.VIEW3D_OT_viewnumpad);
-	WmOperators.WM_operatortype_append(View3dEdit.VIEW3D_OT_view_orbit);
-	WmOperators.WM_operatortype_append(View3dEdit.VIEW3D_OT_view_pan);
-	WmOperators.WM_operatortype_append(View3dEdit.VIEW3D_OT_view_persportho);
-	WmOperators.WM_operatortype_append(View3dEdit.VIEW3D_OT_view_center);
-	WmOperators.WM_operatortype_append(View3dSelect.VIEW3D_OT_select);
+	WmOperatorsUtil.WM_operatortype_append(View3dEdit.VIEW3D_OT_viewrotate);
+	WmOperatorsUtil.WM_operatortype_append(View3dEdit.VIEW3D_OT_viewmove);
+	WmOperatorsUtil.WM_operatortype_append(View3dEdit.VIEW3D_OT_zoom);
+	WmOperatorsUtil.WM_operatortype_append(View3dEdit.VIEW3D_OT_view_all);
+	WmOperatorsUtil.WM_operatortype_append(View3dEdit.VIEW3D_OT_viewnumpad);
+	WmOperatorsUtil.WM_operatortype_append(View3dEdit.VIEW3D_OT_view_orbit);
+	WmOperatorsUtil.WM_operatortype_append(View3dEdit.VIEW3D_OT_view_pan);
+	WmOperatorsUtil.WM_operatortype_append(View3dEdit.VIEW3D_OT_view_persportho);
+	WmOperatorsUtil.WM_operatortype_append(View3dEdit.VIEW3D_OT_view_center);
+	WmOperatorsUtil.WM_operatortype_append(View3dSelect.VIEW3D_OT_select);
 //	WmOperators.WM_operatortype_append(View3dEdit.VIEW3D_OT_select_border);
 //	WmOperators.WM_operatortype_append(View3dEdit.VIEW3D_OT_drag);
 //	WmOperators.WM_operatortype_append(View3dEdit.VIEW3D_OT_clip_border);
@@ -67,17 +67,17 @@ public void run()
 //	WM_operatortype_append(VIEW3D_OT_smoothview);
 //	WM_operatortype_append(VIEW3D_OT_render_border);
 //	WM_operatortype_append(VIEW3D_OT_zoom_border);
-	WmOperators.WM_operatortype_append(View3dEdit.VIEW3D_OT_manipulator);
-	WmOperators.WM_operatortype_append(View3dEdit.VIEW3D_OT_cursor3d);
+	WmOperatorsUtil.WM_operatortype_append(View3dEdit.VIEW3D_OT_manipulator);
+	WmOperatorsUtil.WM_operatortype_append(View3dEdit.VIEW3D_OT_cursor3d);
 //	WM_operatortype_append(VIEW3D_OT_select_lasso);
 //	WM_operatortype_append(VIEW3D_OT_setcameratoview);
-	WmOperators.WM_operatortype_append(View3dEdit.VIEW3D_OT_drawtype);
+	WmOperatorsUtil.WM_operatortype_append(View3dEdit.VIEW3D_OT_drawtype);
 //	WM_operatortype_append(VIEW3D_OT_localview);
 //	WM_operatortype_append(VIEW3D_OT_game_start);
 //	WM_operatortype_append(VIEW3D_OT_layers);
 
-	WmOperators.WM_operatortype_append(View3dButtons.VIEW3D_OT_properties);
-	WmOperators.WM_operatortype_append(View3dToolbar.VIEW3D_OT_toolbar);
+	WmOperatorsUtil.WM_operatortype_append(View3dButtons.VIEW3D_OT_properties);
+	WmOperatorsUtil.WM_operatortype_append(View3dToolbar.VIEW3D_OT_toolbar);
 
 //	WM_operatortype_append(VIEW3D_OT_snap_selected_to_grid);
 //	WM_operatortype_append(VIEW3D_OT_snap_selected_to_cursor);

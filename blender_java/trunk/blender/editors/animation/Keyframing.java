@@ -1,7 +1,6 @@
 package blender.editors.animation;
 
 import blender.blenkernel.bContext;
-import blender.blenlib.StringUtil;
 import blender.makesdna.WindowManagerTypes;
 import blender.makesdna.WindowManagerTypes.wmOperatorType;
 import blender.makesdna.sdna.wmOperator;
@@ -9,7 +8,7 @@ import blender.makesrna.RNATypes;
 import blender.makesrna.RnaDefine;
 import blender.makesrna.rna_internal_types.PropertyRNA;
 import blender.windowmanager.WmTypes;
-import blender.windowmanager.WmOperators.OpFunc;
+import blender.windowmanager.WmOperatorsUtil.OpFunc;
 import blender.windowmanager.WmTypes.wmEvent;
 
 public class Keyframing {

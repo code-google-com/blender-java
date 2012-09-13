@@ -115,10 +115,10 @@ public SpaceLink run(SpaceLink sl)
 
 /* add handlers, stuff you only do once or on area/region changes */
 public static ARegionType.Init info_main_area_init = new ARegionType.Init() {
-public void run(wmWindowManager wm, ARegion ar)
+public void run(bContext C, wmWindowManager wm, ARegion ar)
 //static void info_main_area_init(wmWindowManager *wm, ARegion *ar)
 {
-	Area.ED_region_panels_init(wm, ar);
+	Area.ED_region_panels_init(C, wm, ar);
 }};
 
 public static ARegionType.Draw info_main_area_draw = new ARegionType.Draw() {
@@ -149,10 +149,10 @@ public void run(wmKeyConfig keyconf)
 
 /* add handlers, stuff you only do once or on area/region changes */
 public static ARegionType.Init info_header_area_init = new ARegionType.Init() {
-public void run(wmWindowManager wm, ARegion ar)
+public void run(bContext C, wmWindowManager wm, ARegion ar)
 //static void info_header_area_init(wmWindowManager *wm, ARegion *ar)
 {
-	Area.ED_region_header_init(ar);
+	Area.ED_region_header_init(C, ar);
 }};
 
 public static ARegionType.Draw info_header_area_draw = new ARegionType.Draw() {
@@ -197,7 +197,7 @@ public void run(bContext C, Menu menu)
 //			uiItemStringO(layout, BLI_path_basename(recent->filepath), ICON_FILE_BLEND, "WM_OT_open_mainfile", "filepath", recent->filepath);
 //		}
 //	} else {
-		UILayout.uiItemL(layout, "No Recent Files", UI.ICON_NULL);
+		UILayout.uiItemL(layout, C, "No Recent Files", UI.ICON_NULL);
 //	}
 }};
 

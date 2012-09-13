@@ -191,34 +191,34 @@ public class NodeHeader {
 			UILayout.uiLayoutSetActive(layout, 0);
 
 		if(snode.treetype==NodeTypes.NTREE_SHADER) {
-			UILayout.uiItemMenuF(layout, "Input", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_INPUT;}});
-			UILayout.uiItemMenuF(layout, "Output", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_OUTPUT;}});
-			UILayout.uiItemMenuF(layout, "Color", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_OP_COLOR;}});
-			UILayout.uiItemMenuF(layout, "Vector", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_OP_VECTOR;}});
-			UILayout.uiItemMenuF(layout, "Convertor", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_CONVERTOR;}});
-			UILayout.uiItemMenuF(layout, "Group", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_GROUP;}});
-			UILayout.uiItemMenuF(layout, "Dynamic", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_OP_DYNAMIC;}});
+			UILayout.uiItemMenuF(layout, C, "Input", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_INPUT;}});
+			UILayout.uiItemMenuF(layout, C, "Output", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_OUTPUT;}});
+			UILayout.uiItemMenuF(layout, C, "Color", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_OP_COLOR;}});
+			UILayout.uiItemMenuF(layout, C, "Vector", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_OP_VECTOR;}});
+			UILayout.uiItemMenuF(layout, C, "Convertor", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_CONVERTOR;}});
+			UILayout.uiItemMenuF(layout, C, "Group", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_GROUP;}});
+			UILayout.uiItemMenuF(layout, C, "Dynamic", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_OP_DYNAMIC;}});
 		}
 		else if(snode.treetype==NodeTypes.NTREE_COMPOSIT) {
-			UILayout.uiItemMenuF(layout, "Input", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_INPUT;}});
-			UILayout.uiItemMenuF(layout, "Output", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_OUTPUT;}});
-			UILayout.uiItemMenuF(layout, "Color", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_OP_COLOR;}});
-			UILayout.uiItemMenuF(layout, "Vector", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_OP_VECTOR;}});
-			UILayout.uiItemMenuF(layout, "Filter", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_OP_FILTER;}});
-			UILayout.uiItemMenuF(layout, "Convertor", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_CONVERTOR;}});
-			UILayout.uiItemMenuF(layout, "Matte", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_MATTE;}});
-			UILayout.uiItemMenuF(layout, "Distort", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_DISTORT;}});
-			UILayout.uiItemMenuF(layout, "Group", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_GROUP;}});
+			UILayout.uiItemMenuF(layout, C, "Input", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_INPUT;}});
+			UILayout.uiItemMenuF(layout, C, "Output", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_OUTPUT;}});
+			UILayout.uiItemMenuF(layout, C, "Color", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_OP_COLOR;}});
+			UILayout.uiItemMenuF(layout, C, "Vector", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_OP_VECTOR;}});
+			UILayout.uiItemMenuF(layout, C, "Filter", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_OP_FILTER;}});
+			UILayout.uiItemMenuF(layout, C, "Convertor", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_CONVERTOR;}});
+			UILayout.uiItemMenuF(layout, C, "Matte", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_MATTE;}});
+			UILayout.uiItemMenuF(layout, C, "Distort", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_DISTORT;}});
+			UILayout.uiItemMenuF(layout, C, "Group", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_GROUP;}});
 		}
 		else if(snode.treetype==NodeTypes.NTREE_TEXTURE) {
-			UILayout.uiItemMenuF(layout, "Input", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_INPUT;}});
-			UILayout.uiItemMenuF(layout, "Output", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_OUTPUT;}});
-			UILayout.uiItemMenuF(layout, "Color", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_OP_COLOR;}});
-			UILayout.uiItemMenuF(layout, "Patterns", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_PATTERN;}});
-			UILayout.uiItemMenuF(layout, "Textures", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_TEXTURE;}});
-			UILayout.uiItemMenuF(layout, "Convertor", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_CONVERTOR;}});
-			UILayout.uiItemMenuF(layout, "Distort", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_DISTORT;}});
-			UILayout.uiItemMenuF(layout, "Group", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_GROUP;}});
+			UILayout.uiItemMenuF(layout, C, "Input", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_INPUT;}});
+			UILayout.uiItemMenuF(layout, C, "Output", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_OUTPUT;}});
+			UILayout.uiItemMenuF(layout, C, "Color", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_OP_COLOR;}});
+			UILayout.uiItemMenuF(layout, C, "Patterns", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_PATTERN;}});
+			UILayout.uiItemMenuF(layout, C, "Textures", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_TEXTURE;}});
+			UILayout.uiItemMenuF(layout, C, "Convertor", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_CONVERTOR;}});
+			UILayout.uiItemMenuF(layout, C, "Distort", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_DISTORT;}});
+			UILayout.uiItemMenuF(layout, C, "Group", 0, node_auto_add_menu, new Ptr<Integer>(){public Integer get(){return Node.NODE_CLASS_GROUP;}});
 		}
 	}};
 

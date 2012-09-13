@@ -29,6 +29,7 @@ package blender.makesrna;
 
 //#include <stdlib.h>
 
+import blender.blenkernel.bContext;
 import blender.blenlib.StringUtil;
 import blender.editors.uinterface.Resources;
 import blender.editors.uinterface.UI;
@@ -54,7 +55,7 @@ public class RnaUIApi {
 //
 //#ifdef RNA_RUNTIME
 	
-	public static void rna_uiItemR(uiLayout layout, PointerRNA ptr, String propname, String name, int icon, int expand, int slider, int toggle, int icon_only, int event, int full_event, int emboss, int index)
+	public static void rna_uiItemR(uiLayout layout, bContext C, PointerRNA ptr, String propname, String name, int icon, int expand, int slider, int toggle, int icon_only, int event, int full_event, int emboss, int index)
 	{
 		PropertyRNA prop= (PropertyRNA)RnaAccess.RNA_struct_find_property(ptr, propname, false);
 		int flag= 0;
@@ -73,14 +74,14 @@ public class RnaUIApi {
 		flag |= (full_event!=0)? UI.UI_ITEM_R_FULL_EVENT: 0;
 		flag |= (emboss!=0)? 0: UI.UI_ITEM_R_NO_BG;
 
-		UILayout.uiItemFullR(layout, ptr, prop, index, 0, flag, name, icon);
+		UILayout.uiItemFullR(layout, C, ptr, prop, index, 0, flag, name, icon);
 	}
 
-	public static PointerRNA rna_uiItemO(uiLayout layout, String opname, String name, int icon, int emboss)
+	public static PointerRNA rna_uiItemO(uiLayout layout, bContext C, String opname, String name, int icon, int emboss)
 	{
 		int flag= UI.UI_ITEM_O_RETURN_PROPS;
 		flag |= (emboss!=0)? 0: UI.UI_ITEM_R_NO_BG;
-		return UILayout.uiItemFullO(layout, opname, name, icon, null, UILayout.uiLayoutGetOperatorContext(layout), flag);
+		return UILayout.uiItemFullO(layout, C, opname, name, icon, null, UILayout.uiLayoutGetOperatorContext(layout), flag);
 	}
 
 //#else

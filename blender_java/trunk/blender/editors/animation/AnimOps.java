@@ -1,7 +1,7 @@
 package blender.editors.animation;
 
 import blender.makesdna.sdna.wmKeyConfig;
-import blender.windowmanager.WmOperators;
+import blender.windowmanager.WmOperatorsUtil;
 
 public class AnimOps {
 //	/**
@@ -352,8 +352,8 @@ public class AnimOps {
 //		WM_operatortype_append(ANIM_OT_previewrange_clear);
 		
 		/* Entire UI --------------------------------------- */
-		WmOperators.WM_operatortype_append(Keyframing.ANIM_OT_keyframe_insert);
-		WmOperators.WM_operatortype_append(Keyframing.ANIM_OT_keyframe_delete);
+		WmOperatorsUtil.WM_operatortype_append(Keyframing.ANIM_OT_keyframe_insert);
+		WmOperatorsUtil.WM_operatortype_append(Keyframing.ANIM_OT_keyframe_delete);
 //		WM_operatortype_append(ANIM_OT_keyframe_insert_menu);
 //		WM_operatortype_append(ANIM_OT_keyframe_delete_v3d);
 //		WM_operatortype_append(ANIM_OT_keyframe_insert_button);

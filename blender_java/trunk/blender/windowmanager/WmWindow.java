@@ -207,7 +207,7 @@ public static wmWindow wm_window_copy(bContext C, wmWindow winorig)
 	win.sizey= winorig.sizey;
 
 	/* duplicate assigns to window */
-	ScreenEdit.ED_screen_duplicate(win, winorig.screen);
+	ScreenEdit.ED_screen_duplicate(C, win, winorig.screen);
 	StringUtil.BLI_strncpy(win.screenname,0, win.screen.id.name,2, win.screenname.length);
 	win.screen.winid= (short)win.winid;
 	

@@ -39,9 +39,8 @@ import blender.blenlib.Arithb;
 import blender.blenlib.StringUtil;
 import blender.blenlib.EditVertUtil.EditMesh;
 import blender.editors.mesh.EditMeshLib;
-import blender.editors.mesh.EditMeshUtil;
 import blender.editors.screen.GlUtil;
-import blender.editors.space_api.SpaceTypeUtil;
+import blender.editors.space_api.SpaceTypeDraw;
 import blender.editors.space_view3d.View3dView;
 import blender.editors.transform.Transform.TransData;
 import blender.editors.transform.Transform.TransInfo;
@@ -1027,7 +1026,7 @@ public static void postTrans(TransInfo t)
 
 	if (t.draw_handle!=null)
 	{
-		SpaceTypeUtil.ED_region_draw_cb_exit((ARegionType)t.ar.type, t.draw_handle);
+		SpaceTypeDraw.ED_region_draw_cb_exit((ARegionType)t.ar.type, t.draw_handle);
 	}
 
 	/* postTrans can be called when nothing is selected, so data is NULL already */

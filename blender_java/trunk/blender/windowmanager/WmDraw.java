@@ -27,8 +27,6 @@
  */
 package blender.windowmanager;
 
-import static blender.blenkernel.Blender.U;
-
 import javax.media.opengl.GL2;
 
 import blender.blenkernel.bContext;
@@ -119,7 +117,7 @@ public static void wm_method_draw_full(GL2 gl, bContext C, wmWindow win)
 		bContext.CTX_wm_area_set(C, null);
 	}
 
-	ScreenEdit.ED_screen_draw(gl, win);
+	ScreenEdit.ED_screen_draw(gl, C, win);
 	Area.ED_area_overdraw(gl, C);
 
 	/* draw overlapping regions */
@@ -261,14 +259,14 @@ public static void wm_method_draw_overlap_all(GL2 gl, bContext C, wmWindow win, 
 
 	/* after area regions so we can do area 'overlay' drawing */
 	if(screen.do_draw!=0) {
-		ScreenEdit.ED_screen_draw(gl, win);
+		ScreenEdit.ED_screen_draw(gl, C, win);
 
 		if(exchange)
 			screen.swap= WIN_FRONT_OK;
 	}
 	else if(exchange) {
 		if(screen.swap==WIN_FRONT_OK) {
-			ScreenEdit.ED_screen_draw(gl, win);
+			ScreenEdit.ED_screen_draw(gl, C, win);
 			screen.swap= WIN_BOTH_OK;
 		}
 		else if(screen.swap==WIN_BACK_OK)
@@ -595,7 +593,7 @@ public static void wm_method_draw_triple(GL2 gl, bContext C, wmWindow win)
 	}
 
 	/* after area regions so we can do area 'overlay' drawing */
-	ScreenEdit.ED_screen_draw(gl, win);
+	ScreenEdit.ED_screen_draw(gl, C, win);
 
 	/* draw overlapping regions */
 	for(ar=(ARegion)screen.regionbase.first; ar!=null; ar= ar.next) {
@@ -679,9 +677,9 @@ public static void wm_draw_update(GL2 gl, bContext C)
 //	GPU_free_unused_buffers();
 	
 	for(win= (wmWindow)wm.windows.first; win!=null; win= win.next) {
-		if(win.drawmethod != U.wmdrawmethod) {
+		if(win.drawmethod != bContext.getUserDef(C).wmdrawmethod) {
 			wm_draw_window_clear(win);
-			win.drawmethod= U.wmdrawmethod;
+			win.drawmethod= bContext.getUserDef(C).wmdrawmethod;
 		}
 
 		if(wm_draw_update_test_window(win)) {
@@ -692,7 +690,7 @@ public static void wm_draw_update(GL2 gl, bContext C)
 
 			/* notifiers for screen redraw */
 			if(win.screen.do_refresh!=0)
-				ScreenEdit.ED_screen_refresh(gl, wm, win);
+				ScreenEdit.ED_screen_refresh(gl, C, wm, win);
 //				ScreenEdit.ED_screen_refresh(wm, win);
 			
 //			drawmethod= wm_automatic_draw_method(win);

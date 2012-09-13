@@ -33,6 +33,7 @@ package blender.editors.uinterface;
 
 import java.net.URL;
 
+import blender.blenkernel.bContext;
 import blender.blenlib.Arithb;
 import blender.blenlib.ListBaseUtil;
 import blender.blenlib.StringUtil;
@@ -40,9 +41,6 @@ import blender.makesdna.ScreenTypes;
 import blender.makesdna.SpaceTypes;
 import blender.makesdna.sdna.ThemeSpace;
 import blender.makesdna.sdna.bTheme;
-import resources.ResourceAnchor;
-//import blender.makesrna.RNATypes.EnumPropertyItem;
-import static blender.blenkernel.Blender.U;
 import javax.media.opengl.GL2;
 
 public class Resources {
@@ -1523,9 +1521,9 @@ public static final int BIFNICONIDS= BIFIconID.BIFICONID_LAST.ordinal() - BIFICO
     public static int theme_spacetype = SpaceTypes.SPACE_VIEW3D;
     public static int theme_regionid= ScreenTypes.RGN_TYPE_WINDOW;
 
-    public static void ui_resources_init(URL url) {
+    public static void ui_resources_init(bContext C, URL url) {
         //UIIcons.UI_icons_init(BIFIconID.BIFICONID_LAST.ordinal(), ResourceAnchor.class.getClassLoader().getResource("resources/icons/blenderbuttons.png"));
-        UIIcons.UI_icons_init(BIFIconID.BIFICONID_LAST.ordinal(), url);
+        UIIcons.UI_icons_init(C, BIFIconID.BIFICONID_LAST.ordinal(), url);
     }
 
 //void ui_resources_free(void)
@@ -1880,12 +1878,12 @@ public static byte[] UI_ThemeGetColorPtr(bTheme btheme, int spacetype, int color
    Note: when you add new colors, created & saved themes need initialized
    use function below, init_userdef_do_versions()
 */
-public static void ui_theme_init_userdef()
+public static void ui_theme_init_userdef(bContext C)
 {
-	bTheme btheme= (bTheme)U.themes.first;
+	bTheme btheme= (bTheme)bContext.getUserDef(C).themes.first;
 
 	/* we search for the theme with name Default */
-	for(btheme= (bTheme)U.themes.first; btheme!=null; btheme= btheme.next) {
+	for(btheme= (bTheme)bContext.getUserDef(C).themes.first; btheme!=null; btheme= btheme.next) {
 		if (StringUtil.strcmp(StringUtil.toCString("Default"), 0, btheme.name, 0) == 0) {
                 break;
             }
@@ -1893,11 +1891,11 @@ public static void ui_theme_init_userdef()
 
 	if(btheme==null) {
 		btheme = new bTheme();
-		ListBaseUtil.BLI_addtail(U.themes, btheme);
+		ListBaseUtil.BLI_addtail(bContext.getUserDef(C).themes, btheme);
 		StringUtil.strcpy(btheme.name, 0, StringUtil.toCString("Default"), 0);
 	}
 
-	UI_SetTheme(0, 0);	// make sure the global used in this file is set
+	UI_SetTheme(C, 0, 0);	// make sure the global used in this file is set
 
 	/* UI buttons */
 //	ui_widget_color_init(btheme.tui);
@@ -2077,16 +2075,16 @@ public static void ui_theme_init_userdef()
 }
 
 
-public static void UI_SetTheme(int spacetype, int regionid)
+public static void UI_SetTheme(bContext C, int spacetype, int regionid)
 {
 	if(spacetype==0) {	// called for safety, when delete themes
-		theme_active= (bTheme)U.themes.first;
+		theme_active= (bTheme)bContext.getUserDef(C).themes.first;
 		theme_spacetype= SpaceTypes.SPACE_VIEW3D;
 		theme_regionid= ScreenTypes.RGN_TYPE_WINDOW;
 	}
 	else {
 		// later on, a local theme can be found too
-		theme_active= (bTheme)U.themes.first;
+		theme_active= (bTheme)bContext.getUserDef(C).themes.first;
 		theme_spacetype= spacetype;
 		theme_regionid= regionid;
 	}

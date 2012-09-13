@@ -42,9 +42,9 @@ import blender.makesrna.RnaDefine;
 import blender.windowmanager.WmEventSystem;
 import blender.windowmanager.WmEventTypes;
 import blender.windowmanager.WmKeymap;
-import blender.windowmanager.WmOperators;
+import blender.windowmanager.WmOperatorsUtil;
 import blender.windowmanager.WmTypes;
-import blender.windowmanager.WmOperators.OpFunc;
+import blender.windowmanager.WmOperatorsUtil.OpFunc;
 import blender.windowmanager.WmTypes.wmEvent;
 
 //
@@ -622,10 +622,10 @@ public void run(wmOperatorType ot)
 public static void transform_operatortypes()
 {
 //	WM_operatortype_append(TFM_OT_transform);
-	WmOperators.WM_operatortype_append(TFM_OT_translate);
-	WmOperators.WM_operatortype_append(TFM_OT_rotate);
+	WmOperatorsUtil.WM_operatortype_append(TFM_OT_translate);
+	WmOperatorsUtil.WM_operatortype_append(TFM_OT_rotate);
 //	WM_operatortype_append(TFM_OT_tosphere);
-	WmOperators.WM_operatortype_append(TFM_OT_resize);
+	WmOperatorsUtil.WM_operatortype_append(TFM_OT_resize);
 //	WM_operatortype_append(TFM_OT_shear);
 //	WM_operatortype_append(TFM_OT_warp);
 //	WM_operatortype_append(TFM_OT_shrink_fatten);

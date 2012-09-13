@@ -27,16 +27,11 @@
  */
 package blender.editors.screen;
 
-import static blender.blenkernel.Blender.G;
-import static blender.blenkernel.Blender.U;
-
 import javax.media.opengl.GL2;
-import javax.media.opengl.GLException;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
 
 import blender.blenfont.Blf;
-import blender.blenkernel.Blender;
 import blender.blenkernel.Pointer;
 import blender.blenkernel.ScreenUtil;
 import blender.blenkernel.UtilDefines;
@@ -49,7 +44,7 @@ import blender.blenkernel.ScreenUtil.SpaceType;
 import blender.blenlib.ListBaseUtil;
 import blender.blenlib.Rct;
 import blender.blenlib.StringUtil;
-import blender.editors.space_api.SpaceTypeUtil;
+import blender.editors.space_api.SpaceTypeDraw;
 import blender.editors.uinterface.Resources;
 import blender.editors.uinterface.UI;
 import blender.editors.uinterface.UIHandlers;
@@ -402,7 +397,7 @@ public static void ED_region_set(GL2 gl, bContext C, ARegion ar)
 	/* note; this sets state, so we can use wmOrtho and friends */
 	WmSubWindow.wmSubWindowScissorSet(gl, win, ar.swinid, ar.drawrct);
 
-	Resources.UI_SetTheme(sa!=null?sa.spacetype:0, ar.type!=null?((ARegionType)ar.type).regionid:0);
+	Resources.UI_SetTheme(C, sa!=null?sa.spacetype:0, ar.type!=null?((ARegionType)ar.type).regionid:0);
 
 	Area.ED_region_pixelspace(gl, ar);
 }
@@ -433,7 +428,7 @@ public static void ED_region_do_draw(GL2 gl, bContext C, ARegion ar)
 	/* note; this sets state, so we can use wmOrtho and friends */
 	WmSubWindow.wmSubWindowScissorSet(gl, win, ar.swinid, ar.drawrct);
 
-	Resources.UI_SetTheme(sa!=null?sa.spacetype:0, ar.type!=null?((ARegionType)ar.type).regionid:0);
+	Resources.UI_SetTheme(C, sa!=null?sa.spacetype:0, ar.type!=null?((ARegionType)ar.type).regionid:0);
 
 	/* optional header info instead? */
 	if(ar.headerstr!=null) {
@@ -447,7 +442,7 @@ public static void ED_region_do_draw(GL2 gl, bContext C, ARegion ar)
 		at.draw.run(gl, C, ar);
 	}
 	
-	SpaceTypeUtil.ED_region_draw_cb_draw(gl, C, ar, SpaceTypeUtil.REGION_DRAW_POST_PIXEL);
+	SpaceTypeDraw.ED_region_draw_cb_draw(gl, C, ar, SpaceTypeDraw.REGION_DRAW_POST_PIXEL);
 
 	UI.uiFreeInactiveBlocks(C, ar.uiblocks);
 
@@ -964,9 +959,9 @@ static void region_rect_recursive(ScrArea sa, ARegion ar, rcti remainder, int qu
 	region_rect_recursive(sa, ar.next, remainder, quad);
 }
 
-static void area_calc_totrct(ScrArea sa, int sizex, int sizey)
+static void area_calc_totrct(bContext C, ScrArea sa, int sizex, int sizey)
 {
-	short rt= (short)UtilDefines.CLAMPIS(G.rt, 0, 16);
+	short rt= (short)UtilDefines.CLAMPIS(bContext.getRT(C), 0, 16);
 
 	if(sa.v1.vec.x>0) sa.totrct.xmin= sa.v1.vec.x+1+rt;
 	else sa.totrct.xmin= sa.v1.vec.x;
@@ -1045,7 +1040,7 @@ static void ed_default_handlers(wmWindowManager wm, ListBase handlers, int flag)
 
 
 /* called in screen_refresh, or screens_init, also area size changes */
-public static void ED_area_initialize(GL2 gl, wmWindowManager wm, wmWindow win, ScrArea sa)
+public static void ED_area_initialize(GL2 gl, bContext C, wmWindowManager wm, wmWindow win, ScrArea sa)
 //public static void ED_area_initialize(wmWindowManager wm, wmWindow win, ScrArea sa)
 {
 	ARegion ar;
@@ -1063,7 +1058,7 @@ public static void ED_area_initialize(GL2 gl, wmWindowManager wm, wmWindow win, 
 		ar.type= ScreenUtil.BKE_regiontype_from_id((SpaceType)sa.type, ar.regiontype);
 
 	/* area sizes */
-	area_calc_totrct(sa, win.sizex, win.sizey);
+	area_calc_totrct(C, sa, win.sizex, win.sizey);
 
 	/* clear all azones, add the area triange widgets */
 	area_azone_initialize(sa);
@@ -1088,7 +1083,7 @@ public static void ED_area_initialize(GL2 gl, wmWindowManager wm, wmWindow win, 
 			ed_default_handlers(wm, ar.handlers, ((ARegionType)ar.type).keymapflag);
 
 			if(((ARegionType)ar.type).init!=null)
-				((ARegionType)ar.type).init.run(wm, ar);
+				((ARegionType)ar.type).init.run(C, wm, ar);
 		}
 		else {
 			/* prevent uiblocks to run */
@@ -1189,8 +1184,8 @@ public static void ED_area_swapspace(GL2 gl, bContext C, ScrArea sa1, ScrArea sa
 	area_copy_data(tmp, sa1, 2);
 	area_copy_data(sa1, sa2, 0);
 	area_copy_data(sa2, tmp, 0);
-	ED_area_initialize(gl, bContext.CTX_wm_manager(C), bContext.CTX_wm_window(C), sa1);
-	ED_area_initialize(gl, bContext.CTX_wm_manager(C), bContext.CTX_wm_window(C), sa2);
+	ED_area_initialize(gl, C, bContext.CTX_wm_manager(C), bContext.CTX_wm_window(C), sa1);
+	ED_area_initialize(gl, C, bContext.CTX_wm_manager(C), bContext.CTX_wm_window(C), sa2);
 //	ED_area_initialize(bContext.CTX_wm_manager(C), bContext.CTX_wm_window(C), sa1);
 //	ED_area_initialize(bContext.CTX_wm_manager(C), bContext.CTX_wm_window(C), sa2);
 
@@ -1260,7 +1255,7 @@ public static void ED_area_newspace(bContext C, ScrArea sa, int type)
 			}
 		}
 
-		ED_area_initialize((GL2)GLU.getCurrentGL(), bContext.CTX_wm_manager(C), bContext.CTX_wm_window(C), sa);
+		ED_area_initialize((GL2)GLU.getCurrentGL(), C, bContext.CTX_wm_manager(C), bContext.CTX_wm_window(C), sa);
 //		ED_area_initialize(bContext.CTX_wm_manager(C), bContext.CTX_wm_window(C), sa);
 
 		/* tell WM to refresh, cursor types etc */
@@ -1378,13 +1373,13 @@ public static int ED_area_header_switchbutton(bContext C, uiBlock block, int yco
             }
         };
 	but= UI.uiDefIconTextButC(block, UI.ICONTEXTROW, 0, BIFIconID.ICON_VIEW3D,
-						   editortype_pup(), xco, yco, Blender.XIC+10, Blender.YIC,
+						   editortype_pup(), xco, yco, bContext.getXIC(C)+10, bContext.getYIC(C),
 						   sa_butspacetype, 1.0f, SpaceTypes.SPACEICONMAX, 0, 0,
 						   "Displays Current editor Type. "+
 						   "Click for menu of available types.");
 	UI.uiButSetFunc(but, spacefunc, null, null);
 
-	return xco + Blender.XIC + 14;
+	return xco + bContext.getXIC(C) + 14;
 }
 
 public static int ED_area_header_standardbuttons(bContext C, uiBlock block, int yco)
@@ -1408,21 +1403,21 @@ public static int ED_area_header_standardbuttons(bContext C, uiBlock block, int 
 	if ((sa.flag & ScreenTypes.HEADER_NO_PULLDOWN)!=0) {
 		UI.uiDefIconButBitS(block, UI.TOG, ScreenTypes.HEADER_NO_PULLDOWN, 0,
 						 BIFIconID.ICON_DISCLOSURE_TRI_RIGHT,
-						 xco,yco,Blender.XIC,Blender.YIC-2,
+						 xco,yco,bContext.getXIC(C),bContext.getYIC(C)-2,
 						 sa_flag, 0, 0, 0, 0,
 						 "Show pulldown menus");
 	}
 	else {
 		UI.uiDefIconButBitS(block, UI.TOG, ScreenTypes.HEADER_NO_PULLDOWN, 0,
 						 BIFIconID.ICON_DISCLOSURE_TRI_DOWN,
-						 xco,yco,Blender.XIC,Blender.YIC-2,
+						 xco,yco,bContext.getXIC(C),bContext.getYIC(C)-2,
 						 sa_flag, 0, 0, 0, 0,
 						 "Hide pulldown menus");
 	}
 
 	UI.uiBlockSetEmboss(block, (short)UI.UI_EMBOSS);
 
-	return xco + Blender.XIC;
+	return xco + bContext.getXIC(C);
 }
 
 /************************ standard UI regions ************************/
@@ -1430,7 +1425,7 @@ public static int ED_area_header_standardbuttons(bContext C, uiBlock block, int 
 public static void ED_region_panels(GL2 gl, bContext C, ARegion ar, boolean vertical, String context, int contextnr)
 {
 	ScrArea sa= bContext.CTX_wm_area(C);
-	uiStyle style= (uiStyle)U.uistyles.first;
+	uiStyle style= (uiStyle)bContext.getUserDef(C).uistyles.first;
 	uiBlock block;
 	PanelType pt;
 	Panel panel;
@@ -1471,7 +1466,7 @@ public static void ED_region_panels(GL2 gl, bContext C, ARegion ar, boolean vert
 		/* draw panel */
 		if(pt.draw!=null && (pt.poll==null || pt.poll.run(C, pt))) {
 			block= UI.uiBeginBlock(C, ar, StringUtil.toJString(pt.idname,0), UI.UI_EMBOSS);
-			panel= UIPanel.uiBeginPanel(sa, ar, block, pt, open);
+			panel= UIPanel.uiBeginPanel(C, sa, ar, block, pt, open);
 
 			/* bad fixed values */
 			header= (pt.flag & ScreenTypes.PNL_NO_HEADER)!=0? 0: 20;
@@ -1595,7 +1590,7 @@ public static void ED_region_panels(GL2 gl, bContext C, ARegion ar, boolean vert
 	View2dUtil.UI_view2d_scrollers_free(scrollers);
 }
 
-public static void ED_region_panels_init(wmWindowManager wm, ARegion ar)
+public static void ED_region_panels_init(bContext C, wmWindowManager wm, ARegion ar)
 {
 	wmKeyMap keymap;
 
@@ -1610,7 +1605,7 @@ public static void ED_region_panels_init(wmWindowManager wm, ARegion ar)
 	if((ar.v2d.align & View2dTypes.V2D_ALIGN_NO_POS_Y)==0)
 		ar.v2d.flag &= ~View2dTypes.V2D_IS_INITIALISED;
 
-	View2dUtil.UI_view2d_region_reinit(ar.v2d, View2dUtil.V2D_COMMONVIEW_PANELS_UI, ar.winx, ar.winy);
+	View2dUtil.UI_view2d_region_reinit(C, ar.v2d, View2dUtil.V2D_COMMONVIEW_PANELS_UI, ar.winx, ar.winy);
 
 	keymap= WmKeymap.WM_keymap_find(wm.defaultconf, "View2D Buttons List", 0, 0);
 	WmEventSystem.WM_event_add_keymap_handler(ar.handlers, keymap);
@@ -1618,7 +1613,7 @@ public static void ED_region_panels_init(wmWindowManager wm, ARegion ar)
 
 public static void ED_region_header(GL2 gl, bContext C, ARegion ar)
 {
-	uiStyle style= (uiStyle)U.uistyles.first;
+	uiStyle style= (uiStyle)bContext.getUserDef(C).uistyles.first;
 	uiBlock block;
 	uiLayout layout;
 	HeaderType ht;
@@ -1671,15 +1666,15 @@ public static void ED_region_header(GL2 gl, bContext C, ARegion ar)
 	}
 
 	/* always as last  */
-	View2dUtil.UI_view2d_totRect_set(ar.v2d, maxco+Blender.XIC+80, (int)(ar.v2d.tot.ymax-ar.v2d.tot.ymin));
+	View2dUtil.UI_view2d_totRect_set(ar.v2d, maxco+bContext.getXIC(C)+80, (int)(ar.v2d.tot.ymax-ar.v2d.tot.ymin));
 
 	/* restore view matrix? */
 	View2dUtil.UI_view2d_view_restore(gl, C);
 }
 
-public static void ED_region_header_init(ARegion ar)
+public static void ED_region_header_init(bContext C, ARegion ar)
 {
-	View2dUtil.UI_view2d_region_reinit(ar.v2d, View2dUtil.V2D_COMMONVIEW_HEADER, ar.winx, ar.winy);
+	View2dUtil.UI_view2d_region_reinit(C, ar.v2d, View2dUtil.V2D_COMMONVIEW_HEADER, ar.winx, ar.winy);
 }
 
 }

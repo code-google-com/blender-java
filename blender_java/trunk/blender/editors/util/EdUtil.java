@@ -105,11 +105,11 @@ public static void ED_editors_exit(bContext C)
 //}
 
 
-public static int GetButStringLength(String str)
+public static int GetButStringLength(bContext C, String str)
 {
 	int rt;
 
-	rt= UIStyle.UI_GetStringWidth(StringUtil.toCString(str),0);
+	rt= UIStyle.UI_GetStringWidth(C, StringUtil.toCString(str),0);
 
 	return rt + 15;
 }

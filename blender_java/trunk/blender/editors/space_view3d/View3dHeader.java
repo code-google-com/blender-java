@@ -1019,14 +1019,14 @@ public static uiMenuCreateFunc view3d_select_objectmenu = new uiMenuCreateFunc()
 public void run(bContext C, uiLayout layout, Object arg_unused)
 //static void view3d_select_objectmenu(bContext *C, uiLayout *layout, void *arg_unused)
 {
-	UILayout.uiItemO(layout, null, 0, "VIEW3D_OT_select_border");
+	UILayout.uiItemO(layout, C, null, 0, "VIEW3D_OT_select_border");
 
 	UILayout.uiItemS(layout);
 
-	UILayout.uiItemO(layout, "Select/Deselect All", 0, "OBJECT_OT_select_all_toggle");
-	UILayout.uiItemO(layout, "Inverse", 0, "OBJECT_OT_select_inverse");
-	UILayout.uiItemO(layout, "Random", 0, "OBJECT_OT_select_random");
-	UILayout.uiItemO(layout, "Select All by Layer", 0, "OBJECT_OT_select_by_layer");
+	UILayout.uiItemO(layout, C, "Select/Deselect All", 0, "OBJECT_OT_select_all_toggle");
+	UILayout.uiItemO(layout, C, "Inverse", 0, "OBJECT_OT_select_inverse");
+	UILayout.uiItemO(layout, C, "Random", 0, "OBJECT_OT_select_random");
+	UILayout.uiItemO(layout, C, "Select All by Layer", 0, "OBJECT_OT_select_by_layer");
 //	UILayout.uiItemMenuEnumO(layout, "Select All by Type", 0, "OBJECT_OT_select_by_type", "type");
 //	UILayout.uiItemMenuEnumO(layout, "Select Grouped", 0, "OBJECT_OT_select_grouped", "type");
 
@@ -2150,16 +2150,16 @@ public void run(bContext C, uiLayout layout, Object arg_unused)
 	UILayout.uiItemS(layout);
 
 	// TODO: these operators may get renamed
-	UILayout.uiItemO(layout, null, 0, "ANIM_OT_insert_keyframe_menu");
-	UILayout.uiItemO(layout, null, 0, "ANIM_OT_delete_keyframe_v3d");
+	UILayout.uiItemO(layout, C, null, 0, "ANIM_OT_insert_keyframe_menu");
+	UILayout.uiItemO(layout, C, null, 0, "ANIM_OT_delete_keyframe_v3d");
 
 	UILayout.uiItemS(layout);
 
-	UILayout.uiItemO(layout, null, 0, "OBJECT_OT_duplicate");
+	UILayout.uiItemO(layout, C, null, 0, "OBJECT_OT_duplicate");
 //	UILayout.uiItemBooleanO(layout, "Duplicate Linked", 0, "OBJECT_OT_duplicate", "linked", 1);
-	UILayout.uiItemO(layout, null, 0, "OBJECT_OT_delete");
+	UILayout.uiItemO(layout, C, null, 0, "OBJECT_OT_delete");
 
-	UILayout.uiItemO(layout, null, 0, "OBJECT_OT_proxy_make");
+	UILayout.uiItemO(layout, C, null, 0, "OBJECT_OT_proxy_make");
 //#if 0
 //	uiDefIconTextBlockBut(block, view3d_edit_object_makelinksmenu, NULL, ICON_RIGHTARROW_THIN, "Make Links", 0, yco-=20, 120, 19, "");
 //	uiDefIconTextBlockBut(block, view3d_edit_object_singleusermenu, NULL, ICON_RIGHTARROW_THIN, "Make Single User", 0, yco-=20, 120, 19, "");
@@ -2185,7 +2185,7 @@ public void run(bContext C, uiLayout layout, Object arg_unused)
 //#endif
 	UILayout.uiItemS(layout);
 
-	UILayout.uiItemO(layout, null, 0, "OBJECT_OT_join");
+	UILayout.uiItemO(layout, C, null, 0, "OBJECT_OT_join");
 
 	UILayout.uiItemS(layout);
 
@@ -3965,7 +3965,7 @@ static void view3d_header_pulldowns(bContext C, uiBlock block, bObject ob, int[]
 	 * menu is drawn wider than it should be. The ypos of -2 is to make it properly fill the
 	 * height of the header */
 
-	xmax= (short)EdUtil.GetButStringLength("Select");
+	xmax= (short)EdUtil.GetButStringLength(C, "Select");
 	if (obedit!=null) {
 		if (ob!=null && ob.type == ObjectTypes.OB_MESH) {
 			UI.uiDefMenuBut(block, view3d_select_meshmenu, null, "Select",	xco,yco, xmax-3, 20, "");
@@ -4008,7 +4008,7 @@ static void view3d_header_pulldowns(bContext C, uiBlock block, bObject ob, int[]
 
 	if (obedit!=null) {
 		if (ob!=null && ob.type == ObjectTypes.OB_MESH) {
-			xmax= (short)EdUtil.GetButStringLength("Mesh");
+			xmax= (short)EdUtil.GetButStringLength(C, "Mesh");
 			UI.uiDefMenuBut(block, view3d_edit_meshmenu, null, "Mesh",	xco,yco, xmax-3, 20, "");
 			xco+= xmax;
 		}
@@ -4083,7 +4083,7 @@ static void view3d_header_pulldowns(bContext C, uiBlock block, bObject ob, int[]
 //			xco+= xmax;
 //		}
 //		else {
-			xmax= (short)EdUtil.GetButStringLength("Object");
+			xmax= (short)EdUtil.GetButStringLength(C, "Object");
 			UI.uiDefMenuBut(block, view3d_edit_objectmenu, null, "Object",	xco,yco, xmax-3, 20, "");
 			xco+= xmax;
 //		}
@@ -4175,7 +4175,7 @@ public static void uiTemplateHeader3D(uiLayout layout, bContext C)
 	UI.uiBlockEndAlign(block);
 	
 	/* Draw type */
-	UILayout.uiItemR(layout, v3dptr, "viewport_shade", UI.UI_ITEM_R_ICON_ONLY, "", UI.ICON_NULL);
+	UILayout.uiItemR(layout, C, v3dptr, "viewport_shade", UI.UI_ITEM_R_ICON_ONLY, "", UI.ICON_NULL);
 
 //	if (obedit==null && ((ob!=null && ob.mode & (OB_MODE_VERTEX_PAINT|OB_MODE_WEIGHT_PAINT|OB_MODE_TEXTURE_PAINT)))) {
 //		/* Manipulators aren't used in weight paint mode */
@@ -4189,8 +4189,8 @@ public static void uiTemplateHeader3D(uiLayout layout, bContext C)
 		String str_menu;
 
 		row= UILayout.uiLayoutRow(layout, 1);
-		UILayout.uiItemR(row, v3dptr, "pivot_point", UI.UI_ITEM_R_ICON_ONLY, "", UI.ICON_NULL);
-		UILayout.uiItemR(row, v3dptr, "use_pivot_point_align", UI.UI_ITEM_R_ICON_ONLY, "", UI.ICON_NULL);
+		UILayout.uiItemR(row, C, v3dptr, "pivot_point", UI.UI_ITEM_R_ICON_ONLY, "", UI.ICON_NULL);
+		UILayout.uiItemR(row, C, v3dptr, "use_pivot_point_align", UI.UI_ITEM_R_ICON_ONLY, "", UI.ICON_NULL);
 
 		/* NDOF */
 		/* Not implemented yet
@@ -4205,7 +4205,7 @@ public static void uiTemplateHeader3D(uiLayout layout, bContext C)
 
 		/* Transform widget / manipulators */
 		row= UILayout.uiLayoutRow(layout, 1);
-		UILayout.uiItemR(row, v3dptr, "show_manipulator", UI.UI_ITEM_R_ICON_ONLY, "", UI.ICON_NULL);
+		UILayout.uiItemR(row, C, v3dptr, "show_manipulator", UI.UI_ITEM_R_ICON_ONLY, "", UI.ICON_NULL);
 		block= UILayout.uiLayoutGetBlock(row);
 		
 		if((v3d.twflag & View3dTypes.V3D_USE_MANIPULATOR)!=0) {
@@ -4258,7 +4258,7 @@ public static void uiTemplateHeader3D(uiLayout layout, bContext C)
 			UITemplates.uiTemplateLayers(layout, v3dptr, "layers", v3dptr, "layers_used", ob_lay);
 
 		/* Scene lock */
-		UILayout.uiItemR(layout, v3dptr, "lock_camera_and_layers", UI.UI_ITEM_R_ICON_ONLY, "", UI.ICON_NULL);
+		UILayout.uiItemR(layout, C, v3dptr, "lock_camera_and_layers", UI.UI_ITEM_R_ICON_ONLY, "", UI.ICON_NULL);
 	}
 	
 	/* selection modus, dont use python for this since it cant do the toggle buttons with shift+click as well as clicking to set one. */

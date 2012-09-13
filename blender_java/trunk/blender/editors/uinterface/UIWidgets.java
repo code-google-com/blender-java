@@ -24,8 +24,6 @@
  */
 package blender.editors.uinterface;
 
-import static blender.blenkernel.Blender.U;
-
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
@@ -2606,9 +2604,9 @@ static void widget_disabled(GL2 gl, rcti rect)
 }
 
 static uiWidgetType wt = new uiWidgetType();
-static uiWidgetType widget_type(uiWidgetTypeEnum type)
+static uiWidgetType widget_type(bContext C, uiWidgetTypeEnum type)
 {
-	bTheme btheme= (bTheme)U.themes.first;
+	bTheme btheme= (bTheme)bContext.getUserDef(C).themes.first;
 	
 	/* defaults */
 	wt.wcol_theme= btheme.tui.wcol_regular;
@@ -2799,7 +2797,7 @@ static int widget_roundbox_set(uiBut but, rcti rect)
 /* conversion from old to new buttons, so still messy */
 public static void ui_draw_but(GL2 gl, bContext C, ARegion ar, uiStyle style, uiBut but, rcti rect)
 {
-	bTheme btheme= (bTheme)U.themes.first;
+	bTheme btheme= (bTheme)bContext.getUserDef(C).themes.first;
 	ThemeUI tui= btheme.tui;
 	uiFontStyle fstyle= style.widget;
 	uiWidgetType wt= null;
@@ -2815,12 +2813,12 @@ public static void ui_draw_but(GL2 gl, bContext C, ARegion ar, uiStyle style, ui
 				break;
 
 			default:
-				wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_MENU_ITEM);
+				wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_MENU_ITEM);
 		}
 	}
 	else if(but.dt==UI.UI_EMBOSSN) {
 		/* "nothing" */
-		wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_ICON);
+		wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_ICON);
 	}
 	else {
 
@@ -2829,7 +2827,7 @@ public static void ui_draw_but(GL2 gl, bContext C, ARegion ar, uiStyle style, ui
 				if((but.block.flag & UI.UI_BLOCK_LOOP)!=0)
 					widget_draw_text_icon.run(gl, style.widgetlabel, tui.wcol_menu_back, but, rect);
 				else {
-					wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_LABEL);
+					wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_LABEL);
 					fstyle= style.widgetlabel;
 				}
 				break;
@@ -2838,32 +2836,32 @@ public static void ui_draw_but(GL2 gl, bContext C, ARegion ar, uiStyle style, ui
 				break;
 
 			case UI.BUT:
-				wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_EXEC);
+				wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_EXEC);
 				break;
 
 			case UI.NUM:
-				wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_NUMBER);
+				wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_NUMBER);
 				break;
 
 			case UI.NUMSLI:
 			case UI.HSVSLI:
-				wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_SLIDER);
+				wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_SLIDER);
 				break;
 
 			case UI.ROW:
-				wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_RADIO);
+				wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_RADIO);
 				break;
 
 			case UI.LISTROW:
-				wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_LISTITEM);
+				wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_LISTITEM);
 				break;
 
 			case UI.TEX:
-				wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_NAME);
+				wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_NAME);
 				break;
 
 			case UI.SEARCH_MENU:
-				wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_NAME);
+				wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_NAME);
 				if((but.block.flag & UI.UI_BLOCK_LOOP)!=0)
 					wt.wcol_theme= btheme.tui.wcol_menu_back;
 				break;
@@ -2872,17 +2870,17 @@ public static void ui_draw_but(GL2 gl, bContext C, ARegion ar, uiStyle style, ui
 			case UI.TOG:
 			case UI.TOGN:
 			case UI.TOG3:
-				wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_TOGGLE);
+				wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_TOGGLE);
 				break;
 
 			case UI.OPTION:
 			case UI.OPTIONN:
 				if ((but.flag & UI.UI_HAS_ICON)==0) {
-					wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_OPTION);
+					wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_OPTION);
 					but.flag |= UI.UI_TEXT_LEFT;
 				}
 				else
-					wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_TOGGLE);
+					wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_TOGGLE);
 				break;
 
 			case UI.MENU:
@@ -2890,33 +2888,33 @@ public static void ui_draw_but(GL2 gl, bContext C, ARegion ar, uiStyle style, ui
 			case UI.ICONTEXTROW:
 //				wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_MENU_RADIO);
 				if(but.str[0]==0 && but.icon!=null) {
-					wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_MENU_ICON_RADIO);
+					wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_MENU_ICON_RADIO);
 				}
 				else {
-					wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_MENU_RADIO);
+					wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_MENU_RADIO);
 				}
 				break;
 
 			case UI.PULLDOWN:
-				wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_PULLDOWN);
+				wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_PULLDOWN);
 				break;
 
 			case UI.BUTM:
-				wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_MENU_ITEM);
+				wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_MENU_ITEM);
 				break;
 
 			case UI.COL:
-				wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_SWATCH);
+				wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_SWATCH);
 				break;
 
 			case UI.ROUNDBOX:
 			case UI.LISTBOX:
-				wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_BOX);
+				wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_BOX);
 				break;
 
 			case UI.LINK:
 			case UI.INLINK:
-				wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_ICON);
+				wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_ICON);
 //				wt.custom= widget_link;
 
 				break;
@@ -2970,11 +2968,11 @@ public static void ui_draw_but(GL2 gl, bContext C, ARegion ar, uiStyle style, ui
 				break;
 
 			case UI.SCROLL:
-				wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_SCROLL);
+				wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_SCROLL);
 				break;
 
 			default:
-				wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_REGULAR);
+				wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_REGULAR);
 		}
 	}
 
@@ -3003,9 +3001,9 @@ public static void ui_draw_but(GL2 gl, bContext C, ARegion ar, uiStyle style, ui
 	}
 }
 
-public static void ui_draw_menu_back(GL2 gl, uiStyle style, uiBlock block, rcti rect)
+public static void ui_draw_menu_back(GL2 gl, bContext C, uiStyle style, uiBlock block, rcti rect)
 {
-	uiWidgetType wt= widget_type(uiWidgetTypeEnum.UI_WTYPE_MENU_BACK);
+	uiWidgetType wt= widget_type(C, uiWidgetTypeEnum.UI_WTYPE_MENU_BACK);
 	
 	wt.state.run(wt, 0);
 	if(block!=null)

@@ -25,13 +25,8 @@
  */
 package blender.editors.screen;
 
-import static blender.blenkernel.Blender.G;
-import static blender.blenkernel.Blender.U;
-
 import javax.media.opengl.GL2;
 
-import blender.blenkernel.LibraryUtil;
-import blender.blenkernel.SceneUtil;
 import blender.blenkernel.ScreenUtil;
 import blender.blenkernel.UtilDefines;
 import blender.blenkernel.bContext;
@@ -40,20 +35,15 @@ import blender.blenlib.ListBaseUtil;
 import blender.blenlib.Rct;
 import blender.blenlib.StringUtil;
 import blender.editors.screen.Area.AZone;
-import blender.makesdna.DNA_ID;
 import blender.makesdna.ScreenTypes;
 import blender.makesdna.SpaceTypes;
-import blender.makesdna.UserDefTypes;
-import blender.makesdna.View3dTypes;
 import blender.makesdna.sdna.ARegion;
 import blender.makesdna.sdna.ID;
 import blender.makesdna.sdna.ListBase;
-import blender.makesdna.sdna.Scene;
 import blender.makesdna.sdna.ScrArea;
 import blender.makesdna.sdna.ScrEdge;
 import blender.makesdna.sdna.ScrVert;
 import blender.makesdna.sdna.SpaceLink;
-import blender.makesdna.sdna.View3D;
 import blender.makesdna.sdna.bScreen;
 import blender.makesdna.sdna.rcti;
 import blender.makesdna.sdna.vec2f;
@@ -410,12 +400,13 @@ public static ScrArea area_split(wmWindow win, bScreen sc, ScrArea sa, char dir,
 
 /* empty screen, with 1 dummy area without spacedata */
 /* uses window size */
-public static bScreen ED_screen_add(wmWindow win, Object scene, byte[] name, int offset)
+public static bScreen ED_screen_add(bContext C, wmWindow win, Object scene, byte[] name, int offset)
 {
 	bScreen sc;
 	ScrVert sv1, sv2, sv3, sv4;
 
-	sc= (bScreen)LibraryUtil.alloc_libblock(G.main.screen, DNA_ID.ID_SCR, name, offset);
+	sc= bContext.create_screen(C, name, offset);
+//	sc= (bScreen)LibraryUtil.alloc_libblock(bContext.CTX_data_main_screen_list(C), DNA_ID.ID_SCR, name, offset);
 	sc.scene= scene;
 	sc.do_refresh= 1;
 	sc.winid= (short)win.winid;
@@ -939,7 +930,7 @@ public static void drawscredge_area_draw(GL2 gl, int sizex, int sizey, int x1, i
 }
 
 /** screen edges drawing **/
-public static void drawscredge_area(GL2 gl, ScrArea sa, int sizex, int sizey, int center)
+public static void drawscredge_area(GL2 gl, bContext C, ScrArea sa, int sizex, int sizey, int center)
 {
 	short x1= sa.v1.vec.x;
 	short y1= sa.v1.vec.y;
@@ -947,7 +938,7 @@ public static void drawscredge_area(GL2 gl, ScrArea sa, int sizex, int sizey, in
 	short y2= sa.v3.vec.y;
 	int a, rt;
 
-	rt= UtilDefines.CLAMPIS(G.rt, 0, 16);
+	rt= UtilDefines.CLAMPIS(bContext.getRT(C), 0, 16);
 
 	if(center==0) {
 		GlUtil.cpack(gl, 0x505050);
@@ -963,14 +954,14 @@ public static void drawscredge_area(GL2 gl, ScrArea sa, int sizex, int sizey, in
 
 /* ****************** EXPORTED API TO OTHER MODULES *************************** */
 
-public static bScreen ED_screen_duplicate(wmWindow win, bScreen sc)
+public static bScreen ED_screen_duplicate(bContext C, wmWindow win, bScreen sc)
 {
 	bScreen newsc;
 
 	if(sc.full != ScreenTypes.SCREENNORMAL) return null; /* XXX handle this case! */
 
 	/* make new empty screen: */
-	newsc= ED_screen_add(win, sc.scene, sc.id.name,2);
+	newsc= ED_screen_add(C, win, sc.scene, sc.id.name,2);
 	/* copy all data */
 	screen_copy(newsc, sc);
 	/* set in window */
@@ -1026,7 +1017,7 @@ public static void ED_screen_do_listen(wmWindow win, wmNotifier note)
 }
 
 /* only for edge lines between areas, and the blended join arrows */
-public static void ED_screen_draw(GL2 gl, wmWindow win)
+public static void ED_screen_draw(GL2 gl, bContext C, wmWindow win)
 {
 //        System.out.println("ED_screen_draw");
 	ScrArea sa;
@@ -1040,10 +1031,10 @@ public static void ED_screen_draw(GL2 gl, wmWindow win)
 	for(sa= (ScrArea)win.screen.areabase.first; sa!=null; sa= sa.next) {
 		if ((sa.flag & ScreenTypes.AREA_FLAG_DRAWJOINFROM)!=0) sa1 = sa;
 		if ((sa.flag & ScreenTypes.AREA_FLAG_DRAWJOINTO)!=0) sa2 = sa;
-		drawscredge_area(gl, sa, win.sizex, win.sizey, 0);
+		drawscredge_area(gl, C, sa, win.sizex, win.sizey, 0);
 	}
 	for(sa= (ScrArea)win.screen.areabase.first; sa!=null; sa= sa.next)
-		drawscredge_area(gl, sa, win.sizex, win.sizey, 1);
+		drawscredge_area(gl, C, sa, win.sizex, win.sizey, 1);
 
 	/* blended join arrow */
 	if (sa1!=null && sa2!=null) {
@@ -1078,7 +1069,7 @@ public static void ED_screen_draw(GL2 gl, wmWindow win)
 
 /* make this screen usable */
 /* for file read and first use, for scaling window, area moves */
-public static void ED_screen_refresh(GL2 gl, wmWindowManager wm, wmWindow win)
+public static void ED_screen_refresh(GL2 gl, bContext C, wmWindowManager wm, wmWindow win)
 //public static void ED_screen_refresh(wmWindowManager wm, wmWindow win)
 {
 	ScrArea sa;
@@ -1098,7 +1089,7 @@ public static void ED_screen_refresh(GL2 gl, wmWindowManager wm, wmWindow win)
 	for(sa= (ScrArea)win.screen.areabase.first; sa!=null; sa= sa.next) {
 		/* set spacetype and region callbacks, calls init() */
 		/* sets subwindows for regions, adds handlers */
-		Area.ED_area_initialize(gl, wm, win, sa);
+		Area.ED_area_initialize(gl, C, wm, win, sa);
 //		Area.ED_area_initialize(wm, win, sa);
 	}
 
@@ -1124,7 +1115,7 @@ public static void ED_screens_initialize(GL2 gl, bContext C, wmWindowManager wm)
 			//win.screen= G.main.screen.first;
 			win.screen= bContext.CTX_data_main_screen_list(C).first;
 
-		ED_screen_refresh(gl, wm, win);
+		ED_screen_refresh(gl, C, wm, win);
 //		ED_screen_refresh(wm, win);
 	}
 }
@@ -1343,7 +1334,7 @@ public static void ED_screen_set(GL2 gl, bContext C, bScreen sc)
 		/* prevent multiwin errors */
 		sc.winid= (short)win.winid;
 
-		ED_screen_refresh(gl, bContext.CTX_wm_manager(C), bContext.CTX_wm_window(C));
+		ED_screen_refresh(gl, C, bContext.CTX_wm_manager(C), bContext.CTX_wm_window(C));
 //		ED_screen_refresh(bContext.CTX_wm_manager(C), bContext.CTX_wm_window(C));
 		WmEventSystem.WM_event_add_notifier(C, WmTypes.NC_WINDOW, null);
 
@@ -1352,62 +1343,63 @@ public static void ED_screen_set(GL2 gl, bContext C, bScreen sc)
 	}
 }
 
-/* only call outside of area/region loops */
-public static void ED_screen_set_scene(bContext C, Scene scene)
-{
-	bScreen sc;
-	bScreen curscreen= bContext.CTX_wm_screen(C);
-
-	for(sc= (bScreen)bContext.CTX_data_main_screen_list(C).first; sc!=null; sc= (bScreen)sc.id.next) {
-		if((U.flag & UserDefTypes.USER_SCENEGLOBAL)!=0 || sc==curscreen) {
-
-			if(scene != sc.scene) {
-				/* all areas endlocalview */
-			// XXX	ScrArea *sa= sc.areabase.first;
-			//	while(sa) {
-			//		endlocalview(sa);
-			//		sa= sa.next;
-			//	}
-				sc.scene= scene;
-			}
-
-		}
-	}
-
-	//  copy_view3d_lock(0);	/* space.c */
-
-	/* are there cameras in the views that are not in the scene? */
-	for(sc= (bScreen)bContext.CTX_data_main_screen_list(C).first; sc!=null; sc= (bScreen)sc.id.next) {
-		if( (U.flag & UserDefTypes.USER_SCENEGLOBAL)!=0 || sc==curscreen) {
-			ScrArea sa= (ScrArea)sc.areabase.first;
-			while(sa!=null) {
-				SpaceLink sl= (SpaceLink)sa.spacedata.first;
-				while(sl!=null) {
-					if(sl.spacetype==SpaceTypes.SPACE_VIEW3D) {
-						View3D v3d= (View3D) sl;
-						if (v3d.camera==null || SceneUtil.object_in_scene(v3d.camera, scene)==null) {
-							v3d.camera= SceneUtil.scene_find_camera((Scene)sc.scene);
-							// XXX if (sc==curscreen) handle_view3d_lock();
-							if (v3d.camera==null && v3d.persp==View3dTypes.V3D_CAMOB)
-								v3d.persp= View3dTypes.V3D_PERSP;
-						}
-					}
-					sl= (SpaceLink)sl.next;
-				}
-				sa= sa.next;
-			}
-		}
-	}
-
-	bContext.CTX_data_scene_set(C, scene);
-	SceneUtil.set_scene_bg(scene);
-
-	ED_update_for_newframe(C, 1);
-
-	/* complete redraw */
-	WmEventSystem.WM_event_add_notifier(C, WmTypes.NC_WINDOW, null);
-
-}
+// moved to SceneUtil
+///* only call outside of area/region loops */
+//public static void ED_screen_set_scene(bContext C, Scene scene)
+//{
+//	bScreen sc;
+//	bScreen curscreen= bContext.CTX_wm_screen(C);
+//
+//	for(sc= (bScreen)bContext.CTX_data_main_screen_list(C).first; sc!=null; sc= (bScreen)sc.id.next) {
+//		if((bContext.getUserDef().flag & UserDefTypes.USER_SCENEGLOBAL)!=0 || sc==curscreen) {
+//
+//			if(scene != sc.scene) {
+//				/* all areas endlocalview */
+//			// XXX	ScrArea *sa= sc.areabase.first;
+//			//	while(sa) {
+//			//		endlocalview(sa);
+//			//		sa= sa.next;
+//			//	}
+//				sc.scene= scene;
+//			}
+//
+//		}
+//	}
+//
+//	//  copy_view3d_lock(0);	/* space.c */
+//
+//	/* are there cameras in the views that are not in the scene? */
+//	for(sc= (bScreen)bContext.CTX_data_main_screen_list(C).first; sc!=null; sc= (bScreen)sc.id.next) {
+//		if( (bContext.getUserDef().flag & UserDefTypes.USER_SCENEGLOBAL)!=0 || sc==curscreen) {
+//			ScrArea sa= (ScrArea)sc.areabase.first;
+//			while(sa!=null) {
+//				SpaceLink sl= (SpaceLink)sa.spacedata.first;
+//				while(sl!=null) {
+//					if(sl.spacetype==SpaceTypes.SPACE_VIEW3D) {
+//						View3D v3d= (View3D) sl;
+//						if (v3d.camera==null || SceneUtil.object_in_scene(v3d.camera, scene)==null) {
+//							v3d.camera= SceneUtil.scene_find_camera((Scene)sc.scene);
+//							// XXX if (sc==curscreen) handle_view3d_lock();
+//							if (v3d.camera==null && v3d.persp==View3dTypes.V3D_CAMOB)
+//								v3d.persp= View3dTypes.V3D_PERSP;
+//						}
+//					}
+//					sl= (SpaceLink)sl.next;
+//				}
+//				sa= sa.next;
+//			}
+//		}
+//	}
+//
+//	bContext.CTX_data_scene_set(C, scene);
+//	SceneUtil.set_scene_bg(scene);
+//
+//	ED_update_for_newframe(C, 1);
+//
+//	/* complete redraw */
+//	WmEventSystem.WM_event_add_notifier(C, WmTypes.NC_WINDOW, null);
+//
+//}
 
 ///* this function toggles: if area is full then the parent will be restored */
 //void ed_screen_fullarea(bContext *C, ScrArea *sa)

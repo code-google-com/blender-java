@@ -491,16 +491,16 @@ public static void time_header_buttons(GL2 gl, bContext C, ARegion ar)
                     }
                 };
 		
-		xmax= EdUtil.GetButStringLength("View");
+		xmax= EdUtil.GetButStringLength(C, "View");
 		UI.uiDefPulldownBut(block, time_viewmenu, sa_p,
 						 "View", xco, yco, xmax-3, 20, "");
 		xco+= xmax;
-		xmax= EdUtil.GetButStringLength("Frame");
+		xmax= EdUtil.GetButStringLength(C, "Frame");
 		UI.uiDefPulldownBut(block, time_framemenu, sa_p,
 						 "Frame", xco, yco, xmax-3, 20, "");
 		xco+= xmax;
 		
-		xmax= EdUtil.GetButStringLength("Playback");
+		xmax= EdUtil.GetButStringLength(C, "Playback");
 		UI.uiDefPulldownBut(block, time_redrawmenu, sa_p,
 						 "Playback", xco, yco, xmax-3, 20, "");
 		xco+= xmax;

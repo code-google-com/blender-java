@@ -26,8 +26,6 @@
  */
 package blender.editors.uinterface;
 
-import static blender.blenkernel.Blender.U;
-
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -209,9 +207,9 @@ static void ui_panel_copy_offset(Panel pa, Panel papar)
 	pa.ofsy= (short)(papar.ofsy + papar.sizey-pa.sizey);
 }
 
-public static Panel uiBeginPanel(ScrArea sa, ARegion ar, uiBlock block, PanelType pt, int[] open)
+public static Panel uiBeginPanel(bContext C, ScrArea sa, ARegion ar, uiBlock block, PanelType pt, int[] open)
 {
-	uiStyle style= (uiStyle)U.uistyles.first;
+	uiStyle style= (uiStyle)bContext.getUserDef(C).uistyles.first;
 	Panel pa, patab, palast, panext;
 	byte[] drawname= pt.label;
 	byte[] idname= pt.idname;
@@ -368,9 +366,9 @@ public static void uiEndPanel(uiBlock block, int width, int height)
 //	return false;
 //}
 
-static void ui_offset_panel_block(uiBlock block)
+static void ui_offset_panel_block(bContext C, uiBlock block)
 {
-	uiStyle style= (uiStyle)U.uistyles.first;
+	uiStyle style= (uiStyle)bContext.getUserDef(C).uistyles.first;
 	uiBut but;
 	int ofsy;
 
@@ -741,9 +739,9 @@ public static Comparator<PanelSort> compare_panel = new Comparator<PanelSort>() 
 
 /* this doesnt draw */
 /* returns 1 when it did something */
-public static int uiAlignPanelStep(ScrArea sa, ARegion ar, float fac, boolean drag)
+public static int uiAlignPanelStep(bContext C, ScrArea sa, ARegion ar, float fac, boolean drag)
 {
-	uiStyle style= (uiStyle)U.uistyles.first;
+	uiStyle style= (uiStyle)bContext.getUserDef(C).uistyles.first;
 	Panel pa;
     PanelSort[] panelsort;
     PanelSort ps, psnext;
@@ -866,7 +864,7 @@ static void ui_do_animate(bContext C, Panel panel)
 	fac= UtilDefines.MIN2(fac, 1.0f);
 
 	/* for max 1 second, interpolate positions */
-	if(uiAlignPanelStep(sa, ar, fac, false)!=0)
+	if(uiAlignPanelStep(C, sa, ar, fac, false)!=0)
 		Area.ED_region_tag_redraw(ar);
 	else
 		fac= 1.0f;
@@ -902,7 +900,7 @@ public static void uiEndPanels(GL2 gl, bContext C, ARegion ar)
 	/* offset contents */
 	for(block= (uiBlock)ar.uiblocks.first; block!=null; block= block.next)
 		if(block.active!=0 && block.panel!=null)
-			ui_offset_panel_block(block);
+			ui_offset_panel_block(C, block);
 
 	/* consistancy; are panels not made, whilst they have tabs */
 	for(panot= (Panel)ar.panels.first; panot!=null; panot= panot.next) {
@@ -934,7 +932,7 @@ public static void uiEndPanels(GL2 gl, bContext C, ARegion ar)
 		if(pa[0]!=null)
 			panel_activate_state(C, pa[0], uiHandlePanelState.PANEL_STATE_ANIMATION);
 		else
-			uiAlignPanelStep(sa, ar, 1.0f, false);
+			uiAlignPanelStep(C, sa, ar, 1.0f, false);
 	}
 
 	/* tag first panel */
@@ -1081,7 +1079,7 @@ static void ui_do_drag(bContext C, wmEvent event, Panel panel)
 		panel.ofsy = (short)(data.startofsy+dy);
 		check_panel_overlap(ar, panel);
 
-		if(align!=0) uiAlignPanelStep(sa, ar, 0.2f, true);
+		if(align!=0) uiAlignPanelStep(C, sa, ar, 0.2f, true);
 	}
 
 	Area.ED_region_tag_redraw(ar);

@@ -40,8 +40,8 @@ import blender.blenlib.Arithb;
 import blender.blenlib.StringUtil;
 import blender.editors.screen.Area;
 import blender.editors.screen.GlUtil;
-import blender.editors.space_api.SpaceTypeUtil;
-import blender.editors.space_api.SpaceTypeUtil.RegionDrawCB;
+import blender.editors.space_api.SpaceTypeDraw;
+import blender.editors.space_api.SpaceTypeDraw.RegionDrawCB;
 import blender.editors.space_view3d.View3dView;
 import blender.editors.transform.Transform.TransInfo.TransformFunc;
 import blender.editors.uinterface.Resources;
@@ -1834,11 +1834,11 @@ public static int initTransform(bContext C, TransInfo t, wmOperator op, wmEvent 
 		//calc_manipulator_stats(curarea);
 		TransformOrientations.initTransformOrientation(C, t);
 
-		t.draw_handle = SpaceTypeUtil.ED_region_draw_cb_activate((ARegionType)t.ar.type, drawTransform, t, SpaceTypeUtil.REGION_DRAW_POST);
+		t.draw_handle = SpaceTypeDraw.ED_region_draw_cb_activate((ARegionType)t.ar.type, drawTransform, t, SpaceTypeDraw.REGION_DRAW_POST);
 	}
 	else if(t.spacetype == SpaceTypes.SPACE_IMAGE) {
 		Arithb.Mat3One(t.spacemtx);
-		t.draw_handle = SpaceTypeUtil.ED_region_draw_cb_activate((ARegionType)t.ar.type, drawTransform, t, SpaceTypeUtil.REGION_DRAW_POST);
+		t.draw_handle = SpaceTypeDraw.ED_region_draw_cb_activate((ARegionType)t.ar.type, drawTransform, t, SpaceTypeDraw.REGION_DRAW_POST);
 	}
 	else
 		Arithb.Mat3One(t.spacemtx);

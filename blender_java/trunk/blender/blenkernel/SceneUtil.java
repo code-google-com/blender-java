@@ -34,12 +34,23 @@ import blender.makesdna.sdna.Base;
 import blender.makesdna.sdna.Scene;
 import blender.blenlib.ListBaseUtil;
 import blender.blenlib.StringUtil;
+import blender.editors.screen.ScreenEdit;
 import blender.makesdna.DNA_ID;
 import blender.makesdna.ObjectTypes;
+import blender.makesdna.SpaceTypes;
+import blender.makesdna.UserDefTypes;
+import blender.makesdna.View3dTypes;
 import blender.makesdna.sdna.Group;
 import blender.makesdna.sdna.GroupObject;
+import blender.makesdna.sdna.ScrArea;
+import blender.makesdna.sdna.SpaceLink;
+import blender.makesdna.sdna.View3D;
 import blender.makesdna.sdna.bObject;
+import blender.makesdna.sdna.bScreen;
+import blender.windowmanager.WmEventSystem;
+import blender.windowmanager.WmTypes;
 import static blender.blenkernel.Blender.G;
+import static blender.blenkernel.Blender.U;
 
 public class SceneUtil {
 
@@ -277,6 +288,85 @@ public static Scene add_scene(String name)
 //	sce.gm.maxphystep = 5;
 
 	return sce;
+}
+
+/* only call outside of area/region loops */
+public static void ED_screen_set_scene(bContext C, Scene scene)
+{
+	bScreen sc;
+	bScreen curscreen= bContext.CTX_wm_screen(C);
+
+	for(sc= (bScreen)bContext.CTX_data_main_screen_list(C).first; sc!=null; sc= (bScreen)sc.id.next) {
+		if((U.flag & UserDefTypes.USER_SCENEGLOBAL)!=0 || sc==curscreen) {
+
+			if(scene != sc.scene) {
+				/* all areas endlocalview */
+			// XXX	ScrArea *sa= sc.areabase.first;
+			//	while(sa) {
+			//		endlocalview(sa);
+			//		sa= sa.next;
+			//	}
+				sc.scene= scene;
+			}
+
+		}
+	}
+
+	//  copy_view3d_lock(0);	/* space.c */
+
+	/* are there cameras in the views that are not in the scene? */
+	for(sc= (bScreen)bContext.CTX_data_main_screen_list(C).first; sc!=null; sc= (bScreen)sc.id.next) {
+		if( (U.flag & UserDefTypes.USER_SCENEGLOBAL)!=0 || sc==curscreen) {
+			ScrArea sa= (ScrArea)sc.areabase.first;
+			while(sa!=null) {
+				SpaceLink sl= (SpaceLink)sa.spacedata.first;
+				while(sl!=null) {
+					if(sl.spacetype==SpaceTypes.SPACE_VIEW3D) {
+						View3D v3d= (View3D) sl;
+						if (v3d.camera==null || SceneUtil.object_in_scene(v3d.camera, scene)==null) {
+							v3d.camera= SceneUtil.scene_find_camera((Scene)sc.scene);
+							// XXX if (sc==curscreen) handle_view3d_lock();
+							if (v3d.camera==null && v3d.persp==View3dTypes.V3D_CAMOB)
+								v3d.persp= View3dTypes.V3D_PERSP;
+						}
+					}
+					sl= (SpaceLink)sl.next;
+				}
+				sa= sa.next;
+			}
+		}
+	}
+
+	bContext.CTX_data_scene_set(C, scene);
+	SceneUtil.set_scene_bg(scene);
+
+	ScreenEdit.ED_update_for_newframe(C, 1);
+
+	/* complete redraw */
+	WmEventSystem.WM_event_add_notifier(C, WmTypes.NC_WINDOW, null);
+
+}
+
+public static void scene_handle_update(Scene sce) {
+	Scene scene= sce;
+	Base base;
+	if(G.rendering==0) { // XXX make lock in future, or separated derivedmesh users in scene
+
+		/* update all objects, ipos, matrices, displists, etc. Flags set by depgraph or manual,
+			no layer check here, gets correct flushed */
+		/* sets first, we allow per definition current scene to have dependencies on sets */
+		if(scene.set!=null) {
+//			for(SETLOOPER(scene.set, base))
+                            for(sce= scene.set, base= (Base)sce.base.first; base!=null; base= (Base)(base.next!=null?base.next:sce.set!=null?(sce=sce.set).base.first:null))
+				ObjectUtil.object_handle_update(scene, base.object);
+		}
+
+		for(base= (Base)scene.base.first; base!=null; base= base.next) {
+			ObjectUtil.object_handle_update(scene, base.object);
+		}
+
+//		BKE_ptcache_quick_cache_all(scene);
+	}
 }
 
 public static Base object_in_scene(bObject ob, Scene sce)
